@@ -1,0 +1,15 @@
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+
+  .custom-swal-background {
+    background-color: #08f92c; 
+    height: fit-content;
+    color: black;
+    font-size: 10px;
+  }
