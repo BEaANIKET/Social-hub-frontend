@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { userContext } from '../App'
 import { useNavigate } from 'react-router-dom'
@@ -9,15 +9,16 @@ export const Navbar = () => {
 
   const { state, dispatch } = useContext(userContext)
   const Navigate = useNavigate()
+  const [open, setOpen] = useState(true)
 
   const handleLogoutBtn = async () => {
-     try {
+    try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials:'include'
+        credentials: 'include'
       })
 
       const data = await response.json();
@@ -41,9 +42,13 @@ export const Navbar = () => {
         Navigate('/')
       }
 
-     } catch (error) {
+    } catch (error) {
       console.log("logout error ", error);
-     }
+    }
+  }
+
+  const handleThreeDot = () => {
+    setOpen(!open)
   }
 
   const renderList = () => {
@@ -55,31 +60,43 @@ export const Navbar = () => {
         <button key={'logout'} onClick={handleLogoutBtn} className="bg-gray-800 px-3 py-2 rounded-lg">Logout</button>
       ]
     }
-    else{
+    else {
       return [
-        <Link key={'signup'} to={'/signup'}><button className="bg-gray-800 px-3 py-2 rounded-lg"> Signup </button> </Link>,
-        <Link key={'login'} to={'/login'}><button className="bg-gray-800 px-3 py-2 rounded-lg"> Login </button></Link>
+        <Link className=' w-full sm:w-fit flex items-center justify-center  ' key={'signup'} to={'/signup'}><button className="bg-gray-800 px-3 py-2 rounded-lg "> Signup </button> </Link>,
+        <Link className=' w-full sm:w-fit flex items-center justify-center m-0 ml-0 ' key={'login'} to={'/login'}><button className="bg-gray-800 px-3 py-2 rounded-lg"> Login </button></Link>
       ]
     }
   }
-  
+
   return (
-    <nav className="bg-black text-white p-4 flex justify-between sticky top-0 items-center">
-      {/* Logo */}
-      <div className="flex items-center">
-        {/* <img
+    <nav className="bg-black text-white z-10 w-full p-4 flex justify-between flex-col sm:flex-row sticky top-0 items-center">
+      <div className=' w-full flex justify-between '>
+        <div className="flex items-center">
+          {/* <img
           src=""
           alt="Logo"
           className="h-10 w-10"
         /> */}
-        <Link to={ state ? '/' : null} className="text-2xl font-bold">Social Hub</Link>
+          <Link to={state ? '/' : null} className="text-2xl font-bold">Social Hub</Link>
+        </div>
+        <div onClick={ handleThreeDot } className=' sm:hidden w-fit h-fit'>
+        <ion-icon size="large" name="ellipsis-vertical-outline" ></ion-icon>
+        </div>
       </div>
+      {/* Logo */}
+
       {/* Profile and Logout Buttons */}
-      <div className="flex items-center space-x-4">
+      <div className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 ` }>
         {
           renderList()
         }
       </div>
+
+
     </nav>
+
   )
+
+
+
 }
