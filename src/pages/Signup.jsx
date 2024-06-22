@@ -66,6 +66,7 @@ export const Signup = () => {
                     email: email,
                     password: password,
                 }),
+                // credentials: true
             });
             //   console.log(response);
             const data = await response.json();
