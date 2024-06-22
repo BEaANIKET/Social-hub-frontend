@@ -38,7 +38,7 @@ export const Login = () => {
 
 
     try {
-      const response = await fetch('/api/signin', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -46,7 +46,8 @@ export const Login = () => {
         body: JSON.stringify({
           email: email,
           password: password
-        })
+        }),
+        credentials: 'include'
       })
 
       if (response.status === 200) {

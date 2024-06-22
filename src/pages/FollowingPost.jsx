@@ -12,11 +12,12 @@ export const FollowingPost = () => {
 
         const fetchData = async () => {
             try {
-                const response = await fetch('/api/getsubpost', {
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/getsubpost`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                    }
+                    },
+                    credentials: 'include'
                 })
 
                 const data = await response.json();
@@ -41,11 +42,13 @@ export const FollowingPost = () => {
     return (
         <div>
             {
-                mypost.length !== 0 && mypost.map(( post ) => {
+                mypost.length !== 0 ? ( mypost.map(( post, index ) => {
                     return (
-                       <Post postData={post} />
+                       <Post key={index} postData={post} />
                     )
-                })
+                }) ) : (
+                    <div className=' w-full h-screen text-black flex items-center justify-center text-2xl'>No Post Found</div>
+                )
             }
         </div>
     )

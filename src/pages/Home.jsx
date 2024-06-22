@@ -15,13 +15,18 @@ export const Home = () => {
 
     const [loading, setLoading] = useState(true);
 
-
+    // console.log(import.meta.env.VITE_URL+"/api/allpost");
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch('/api/allpost')
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/allpost`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
                 const data = await response.json()
-                if (response.status === 200) {
+                if (response.ok) {
                     setPosts(data.post)
                     setLoading(false)
                     // console.log(data);

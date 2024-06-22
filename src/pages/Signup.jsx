@@ -56,7 +56,7 @@ export const Signup = () => {
         setError({ message: '', show: false });
 
         try {
-            const response = await fetch('/api/signup', {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

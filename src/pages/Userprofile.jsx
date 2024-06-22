@@ -25,7 +25,7 @@ export const Userprofile = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`/api/userprofile/${id}`, {
+                const response = await fetch(`${import.meta.env.VITE_URL}/api/userprofile/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -56,14 +56,15 @@ export const Userprofile = () => {
 
     const handleFollowBtn = async () => {
         try {
-            const response = await fetch('/api/follow', {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/follow`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     followId: id,
-                })
+                }),
+                credentials: 'include'
             });
             const data = await response.json();
             if (response.ok) {
@@ -77,14 +78,15 @@ export const Userprofile = () => {
 
     const handleUnFollowBtn = async () => {
         try {
-            const response = await fetch('/api/unfollow', {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/unfollow`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     followId: id,
-                })
+                }),
+                credentials: 'include'
             });
             const data = await response.json();
             if (response.ok) {

@@ -50,7 +50,7 @@ export const CreatePost = () => {
       console.log(url);
 
       // Create post using the uploaded image URL
-      const response = await fetch('/api/createpost', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/createpost`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,8 @@ export const CreatePost = () => {
           title: title,
           body: description,
           url: url
-        })
+        }),
+        credentials: 'include'
       });
 
       const data = await response.json();

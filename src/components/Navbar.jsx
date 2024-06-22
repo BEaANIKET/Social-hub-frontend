@@ -12,11 +12,12 @@ export const Navbar = () => {
 
   const handleLogoutBtn = async () => {
      try {
-      const response = await fetch('/api/logout', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        credentials:'include'
       })
 
       const data = await response.json();

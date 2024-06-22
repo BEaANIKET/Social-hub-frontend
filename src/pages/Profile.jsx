@@ -32,8 +32,9 @@ export const Profile = () => {
     const fetchData = async () => {
 
         try {
-            const response = await fetch(`/api/userprofile/${state.id}`, {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/userprofile/${state.id}`, {
                 method: 'GET',
+                withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -108,7 +109,7 @@ export const Profile = () => {
 
 
 
-            const response = await fetch('/api/updateprofile', {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/updateprofile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -118,7 +119,8 @@ export const Profile = () => {
                     name: username,
                     bio: bio,
                     link: link
-                })
+                }),
+                credentials: 'include',
             });
 
             const data = await response.json();
@@ -162,7 +164,7 @@ export const Profile = () => {
     const handleDeletePost = async () => {
         try {
             setDeleteLoading(true)
-            const response = await fetch(`/api/deletepost/${selectedPost._id}`, {
+            const response = await fetch(`${import.meta.env.VITE_URL}/api/deletepost/${selectedPost._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
