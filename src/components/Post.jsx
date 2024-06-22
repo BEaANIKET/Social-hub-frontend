@@ -44,7 +44,8 @@ export const Post = ({ postData }) => {
         },
         body: JSON.stringify({
           postId: postData._id
-        })
+        }),
+        credentials: 'include'
       })
 
       const data = await response.json();
@@ -68,7 +69,8 @@ export const Post = ({ postData }) => {
         },
         body: JSON.stringify({
           postId: postData._id
-        })
+        }),
+        credentials: 'include'
       })
 
       const data = await response.json();
@@ -111,7 +113,8 @@ export const Post = ({ postData }) => {
         body: JSON.stringify({
           text: newComment,
           postId: postData._id
-        })
+        }),
+        credentials: 'include'
       })
 
       const data = await response.json()
