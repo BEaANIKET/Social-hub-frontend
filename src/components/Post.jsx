@@ -37,7 +37,7 @@ export const Post = ({ postData }) => {
         });
         return
       }
-      const response = await fetch('/api/like', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/like`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ export const Post = ({ postData }) => {
 
   const handleDisLike = async () => {
     try {
-      const response = await fetch('/api/unlike', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/unlike`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -105,7 +105,7 @@ export const Post = ({ postData }) => {
     }
 
     try {
-      const response = await fetch('/api/comment', {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/comment`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
