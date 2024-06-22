@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { userContext } from '../App'
 import { useNavigate } from 'react-router-dom'
@@ -47,6 +47,13 @@ export const Navbar = () => {
     }
   }
 
+  const handelSetOpen = () => {
+    setOpen(true)
+  }
+
+  useEffect(() => {
+  }, [Navigate])
+
   const handleThreeDot = () => {
     setOpen(!open)
   }
@@ -54,16 +61,16 @@ export const Navbar = () => {
   const renderList = () => {
     if (state) {
       return [
-        <Link key={'profile'} to={'/profile'}><button className="bg-gray-800 px-3 py-2 rounded-lg"> Profile  </button></Link>,
-        <Link key={'createPost'} to={'/createpost'}><button className="bg-gray-800 px-3 py-2 rounded-lg"> CreatePost  </button></Link>,
-        <Link key={'followingPost'} to={'/followingpost'}><button className="bg-gray-800 px-3 py-2 rounded-lg"> Following Post  </button></Link>,
-        <button key={'logout'} onClick={handleLogoutBtn} className="bg-gray-800 px-3 py-2 rounded-lg">Logout</button>
+        <Link onClick={handelSetOpen} className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  ' key={'profile'} to={'/profile'}><button className=" px-3 py-2 rounded-lg"> Profile  </button></Link>,
+        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  ' key={'createPost'} to={'/createpost'}><button className="px-3 py-2 rounded-lg"> CreatePost  </button></Link>,
+        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  ' key={'followingPost'} to={'/followingpost'}><button className=" px-3 py-2 rounded-lg"> Following Post  </button></Link>,
+        <button key={'logout'} onClick={handleLogoutBtn} className=" px-3 py-2 rounded-lg">Logout</button>
       ]
     }
     else {
       return [
-        <Link className=' w-full sm:w-fit flex items-center justify-center  ' key={'signup'} to={'/signup'}><button className="bg-gray-800 px-3 py-2 rounded-lg "> Signup </button> </Link>,
-        <Link className=' w-full sm:w-fit flex items-center justify-center m-0 ml-0 ' key={'login'} to={'/login'}><button className="bg-gray-800 px-3 py-2 rounded-lg"> Login </button></Link>
+        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  ' key={'signup'} to={'/signup'}><button className=" px-3 py-2 rounded-lg "> Signup </button> </Link>,
+        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center m-0 bg-gray-800 ' key={'login'} to={'/login'}><button className=" px-3 py-2 rounded-lg"> Login </button></Link>
       ]
     }
   }
@@ -79,14 +86,14 @@ export const Navbar = () => {
         /> */}
           <Link to={state ? '/' : null} className="text-2xl font-bold">Social Hub</Link>
         </div>
-        <div onClick={ handleThreeDot } className=' sm:hidden w-fit h-fit'>
-        <ion-icon size="large" name="ellipsis-vertical-outline" ></ion-icon>
+        <div onClick={handleThreeDot} className=' sm:hidden w-fit h-fit'>
+          <ion-icon size="large" name="ellipsis-vertical-outline" ></ion-icon>
         </div>
       </div>
       {/* Logo */}
 
       {/* Profile and Logout Buttons */}
-      <div className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 ` }>
+      <div className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 `}>
         {
           renderList()
         }
