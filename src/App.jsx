@@ -24,6 +24,7 @@ function getCookie(name) {
           const startIndex = cookieUser.indexOf('{')
           const endIndex = cookieUser.indexOf('}') + 1;
           const user = cookieUser.substring(startIndex, endIndex);
+          console.log(user);
           return JSON.parse(user)
       }
   }
@@ -37,6 +38,7 @@ const Routing = () => {
   useEffect(() => {
     const user = getCookie('user');
     if(user){
+      console.log(user);
       dispatch({type:"USER", payload: user})
       // navigate('/')
     }
