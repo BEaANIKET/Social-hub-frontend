@@ -86,6 +86,12 @@ export const Login = () => {
 
   };
 
+  const handleForgetPassword = ()=> {
+    Navigate('/forgetpassword')
+  }
+  
+
+
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-gray-100 fixed w-full top-0">
@@ -126,6 +132,13 @@ export const Login = () => {
               onClick={handleLoginFormSubmit}
             >
               Login
+            </button>
+
+            <button
+              className=' cursor-pointer w-full flex items-center justify-center text-black text-sm mt-2'
+              onClick={handleForgetPassword}
+            >
+              forget password
             </button>
             <button
               className=' cursor-pointer w-full flex items-center justify-center text-black text-sm mt-2'

@@ -103,7 +103,4 @@ export const Navbar = () => {
     </nav>
 
   )
-
-
-
 }
