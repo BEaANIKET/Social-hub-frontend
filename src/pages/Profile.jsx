@@ -208,10 +208,10 @@ export const Profile = () => {
     }
 
     return (
-        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen fixed w-full top-[ 50px ] '>
+        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen w-full '>
 
             {/* User top sections */}
-            <div className='sm:pl-[30px] pl-2 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row items-center sm:gap-[30px] md:gap-[100px] w-full justify-center'>
+            <div className='sm:pl-[30px] pl-0 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row items-center sm:gap-[30px] md:gap-[100px] w-full justify-center'>
 
                 {/* User logo */}
                 <div>
@@ -221,7 +221,7 @@ export const Profile = () => {
                 </div>
 
                 {/* User details */}
-                <div className='flex flex-col gap-5'>
+                <div className='flex flex-col gap-5 w-fit mt-3 sm:mt-0'>
                     <div className='flex gap-3 justify-between'>
                         <p className='text-xl opacity-[.9]'> {mypost?.user?.name || 'Loading..'} </p>
                         <div onClick={openEditprofilePopup} className=' cursor-pointer rounded-sm border-2 border-black flex items-center justify-center w-fit h-fit pl-2 pr-2'>

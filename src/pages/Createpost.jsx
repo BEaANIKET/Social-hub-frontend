@@ -111,7 +111,9 @@ export const CreatePost = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden md:max-w-2xl my-4 fixed w-full top-0">
+    <>
+      <div className=' flex w-full item-center justify-center  '>
+      <div className=" max-w-md mx-auto rounded-lg shadow-md overflow-hidden md:max-w-2xl my-4  w-full ">
       <form onSubmit={handleSubmit} className="p-6">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
@@ -194,6 +196,9 @@ export const CreatePost = () => {
         </div>
       </form>
     </div>
+      </div>
+    </>
+    
   );
 };
 
