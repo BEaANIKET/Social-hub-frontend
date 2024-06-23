@@ -40,7 +40,7 @@ export const FollowingPost = () => {
     }, [])
 
     return (
-        <div>
+        <div className=' mt-[50px] '>
             {
                 mypost.length !== 0 ? ( mypost.map(( post, index ) => {
                     return (

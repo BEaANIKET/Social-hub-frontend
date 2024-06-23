@@ -208,7 +208,7 @@ export const Profile = () => {
     }
 
     return (
-        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen fixed w-full top-0'>
+        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen fixed w-full top-[ 50px ] '>
 
             {/* User top sections */}
             <div className='sm:pl-[30px] pl-2 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row items-center sm:gap-[30px] md:gap-[100px] w-full justify-center'>

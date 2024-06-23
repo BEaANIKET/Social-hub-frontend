@@ -117,7 +117,7 @@ export const Userprofile = () => {
     }
 
     return (
-        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen'>
+        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen mt-[50px] '>
             {/* User top sections */}
             <div className='sm:pl-[30px] pl-2 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row  sm:gap-[30px] md:gap-[100px] w-full justify-center'>
                 {/* User logo */}

@@ -61,10 +61,10 @@ export const Navbar = () => {
   const renderList = () => {
     if (state) {
       return [
-        <Link onClick={handelSetOpen} className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  ' key={'profile'} to={'/profile'}><button className=" px-3 py-2 rounded-lg"> Profile  </button></Link>,
-        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  ' key={'createPost'} to={'/createpost'}><button className="px-3 py-2 rounded-lg"> CreatePost  </button></Link>,
-        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  ' key={'followingPost'} to={'/followingpost'}><button className=" px-3 py-2 rounded-lg"> Following Post  </button></Link>,
-        <button key={'logout'} onClick={handleLogoutBtn} className=" px-3 py-2 rounded-lg">Logout</button>
+        <Link onClick={handelSetOpen} className='  w-full sm:w-fit flex items-center rounded-lg justify-center bg-gray-800  ' key={'profile'} to={'/profile'}><button className=" px-3 py-2 "> Profile  </button></Link>,
+        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  rounded-lg ' key={'createPost'} to={'/createpost'}><button className="px-3 py-2 "> CreatePost  </button></Link>,
+        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit whitespace-nowrap flex items-center justify-center rounded-lg bg-gray-800  ' key={'followingPost'} to={'/followingpost'}><button className=" px-3 py-2 "> Following Post  </button></Link>,
+        <button  key={'logout'} onClick={handleLogoutBtn} className=" px-3 py-2 rounded-lg w-full sm:w-fit flex items-center justify-center bg-gray-800 ">Logout</button>
       ]
     }
     else {
