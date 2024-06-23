@@ -69,8 +69,8 @@ export const Navbar = () => {
     }
     else {
       return [
-        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  ' key={'signup'} to={'/signup'}><button className=" px-3 py-2 rounded-lg "> Signup </button> </Link>,
-        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center m-0 bg-gray-800 ' key={'login'} to={'/login'}><button className=" px-3 py-2 rounded-lg"> Login </button></Link>
+        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800 rounded-lg   ' key={'signup'} to={'/signup'}><button className=" px-3 py-2 "> Signup </button> </Link>,
+        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center m-0 bg-gray-800 rounded-lg ' key={'login'} to={'/login'}><button className=" px-3 py-2 "> Login </button></Link>
       ]
     }
   }
