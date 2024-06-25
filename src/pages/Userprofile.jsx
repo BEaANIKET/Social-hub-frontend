@@ -38,7 +38,7 @@ export const Userprofile = () => {
                     const { user, userPosts } = data;
                     setMypost({ user, userPosts });
                     const isFollowing = user.followers.includes(state?.id);
-                    setFollowBtnShow(!isFollowing); 
+                    setFollowBtnShow(!isFollowing);
                 } else {
                     setError(true);
                 }
@@ -50,7 +50,7 @@ export const Userprofile = () => {
             }
         };
 
-        
+
         fetchData();
     }, []);
 
@@ -70,7 +70,7 @@ export const Userprofile = () => {
             const data = await response.json();
             if (response.ok) {
                 setFollowBtnShow(false);
-                setfollower( follower + 1 ) // Update UI state after successful follow
+                setfollower(follower + 1) // Update UI state after successful follow
             }
         } catch (error) {
             console.log("follow error ", error);
@@ -92,7 +92,7 @@ export const Userprofile = () => {
             const data = await response.json();
             if (response.ok) {
                 setFollowBtnShow(true); // Update UI state after successful unfollow
-                setfollower( follower==0 ? 0 : follower - 1 )
+                setfollower(follower == 0 ? 0 : follower - 1)
             }
         } catch (error) {
             console.log("unfollow error ", error);
@@ -193,6 +193,7 @@ export const Userprofile = () => {
             {/* User post sections */}
             <hr className='w-full' />
             <div className='post mt-[20px] w-full grid grid-cols-3 sm:grid-cols-4 pl-[10px] pr-[10px] gap-[10px] '>
+
                 {mypost.userPosts.length !== 0 ? (
                     mypost.userPosts.map((post, index) => (
                         <div key={index} onClick={() => openPopup(post)} className='cursor-pointer'>
@@ -214,8 +215,11 @@ export const Userprofile = () => {
                                 <ion-icon name='close-outline'></ion-icon>
                             </button>
                         </div>
-                        <img className='max-w-[700px] w-full' src={selectedPost.image} alt='' />
+                        <img className=' sm:max-w-[700px] max-w-[90vw] max-h-[70vh] ' src={selectedPost.image} alt='' />
                         <p className='text-gray-700 mt-2'>{selectedPost.body}</p>
+                        <div>
+                            <p> ❤️ {selectedPost.likes.length} </p>
+                        </div>
                     </div>
                 </div>
             )}
