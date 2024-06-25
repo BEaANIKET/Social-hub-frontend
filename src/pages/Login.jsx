@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { userContext } from '../App';
 import Swal from 'sweetalert2'
 import '../App.css'
+import { Loader } from '../components/Loader';
 
 // const Swal = require('sweetalert2')
 
@@ -12,6 +13,7 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const Navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
 
   const [error, setError] = useState({
     message: "",
@@ -22,7 +24,7 @@ export const Login = () => {
 
   const handleLoginFormSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true)
     setError({
       message: "",
       isError: false
@@ -33,6 +35,7 @@ export const Login = () => {
         message: "All fields are required",
         isError: true
       });
+      setLoading(false)
       return;
     }
 
@@ -52,6 +55,7 @@ export const Login = () => {
       })
 
       if (response.status === 200) {
+        setLoading(false)
         const data = await response.json();
         setError({
           message: "",
@@ -82,18 +86,24 @@ export const Login = () => {
         message: "Failed to login. Please try again later.",
         isError: true
       })
+    } finally{
+      setLoading(false)
     }
 
   };
 
-  const handleForgetPassword = ()=> {
+  const handleForgetPassword = () => {
     Navigate('/forgetpassword')
   }
-  
 
 
   return (
     <>
+      {
+        loading && (
+          <Loader />
+        )
+      }
       <div className="min-h-screen flex items-center justify-center bg-gray-100 fixed w-full top-0">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
           <h2 className="text-2xl font-bold mb-5 text-center">Social Hub</h2>

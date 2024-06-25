@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import profileLogo from '../assets/profileUser.jpg';
 import { useParams } from 'react-router-dom';
 import { userContext } from '../App';
+import { Loader } from '../components/Loader';
 
 export const Userprofile = () => {
     const { state, dispatch } = useContext(userContext);
@@ -36,7 +37,7 @@ export const Userprofile = () => {
                 if (response.ok) {
                     const { user, userPosts } = data;
                     setMypost({ user, userPosts });
-                    const isFollowing = user.followers.includes(state.id);
+                    const isFollowing = user.followers.includes(state?.id);
                     setFollowBtnShow(!isFollowing); 
                 } else {
                     setError(true);
@@ -109,7 +110,9 @@ export const Userprofile = () => {
     };
 
     if (loading) {
-        return <div className='w-full h-screen text-black flex text-2xl items-center justify-center'>Loading...</div>;
+        return (
+            <Loader />
+        )
     }
 
     if (error) {
@@ -117,9 +120,9 @@ export const Userprofile = () => {
     }
 
     return (
-        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen mt-[50px] '>
+        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen '>
             {/* User top sections */}
-            <div className='sm:pl-[30px] pl-2 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row  sm:gap-[30px] md:gap-[100px] w-full justify-center'>
+            <div className='sm:pl-[30px] pl-2 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row  sm:gap-[30px] md:gap-[100px] w-full justify-center items-center'>
                 {/* User logo */}
                 <div>
                     <div className='h-[200px] w-[200px] rounded-full overflow-hidden'>
@@ -127,7 +130,7 @@ export const Userprofile = () => {
                     </div>
                 </div>
                 {/* User details */}
-                <div className='flex flex-col gap-5'>
+                <div className='flex flex-col gap-5 mt-[20px] '>
                     <div className='flex gap-3 justify-between'>
                         <p className='text-xl opacity-[.9]'> {mypost.user?.name || 'Loading..'} </p>
                     </div>

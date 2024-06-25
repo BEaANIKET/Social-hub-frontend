@@ -4,6 +4,7 @@ import profileLogo from '../assets/profileUser.jpg';
 import Swal from 'sweetalert2'
 import '../App.css'
 import { useNavigate } from 'react-router-dom';
+import { Loader } from '../components/Loader';
 
 
 export const Profile = () => {
@@ -193,9 +194,7 @@ export const Profile = () => {
 
     if (loading) {
         return (
-            <div className='w-full h-screen text-black flex text-2xl items-center justify-center'>
-                Loading...
-            </div>
+            <Loader />
         );
     }
 
@@ -206,6 +205,8 @@ export const Profile = () => {
             </div>
         );
     }
+
+    // console.log(selectedPost);
 
     return (
         <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen w-full '>
@@ -288,9 +289,14 @@ export const Profile = () => {
                                 <ion-icon name='close-outline'></ion-icon>
                             </button>
                         </div>
-                        <img className='max-w-[700px] w-full' src={selectedPost.image} alt='' />
+                        <img className='max-w-[700px] max-h-[70vh] ' src={selectedPost.image} alt='' />
                         <p className='text-gray-700 mt-2'>{selectedPost.body}</p>
-                        <div className='flex justify-end mt-4'>
+                        <div className='flex justify-between mt-4'>
+
+                            <div>
+                                <p> ❤️ {selectedPost.likes.length} </p>
+                            </div>
+
                             {
                                 deleteLoading == true ? (
                                     <button className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>
@@ -306,6 +312,7 @@ export const Profile = () => {
 
 
                         </div>
+                        hsaklfha
                     </div>
                 </div>
             )}

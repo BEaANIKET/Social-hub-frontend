@@ -22,7 +22,6 @@ export const Post = ({ postData }) => {
   }, [state])
 
   const handleLike = async () => {
-
     try {
       if (!state) {
         Swal.fire({
@@ -37,6 +36,8 @@ export const Post = ({ postData }) => {
         });
         return
       }
+      setLiked(true)
+
       const response = await fetch(`${import.meta.env.VITE_URL}/api/like`, {
         method: 'PUT',
         headers: {
@@ -51,7 +52,6 @@ export const Post = ({ postData }) => {
       const data = await response.json();
       if (response.ok) {
         setLikes(data.updatedData.likes.length)
-        setLiked(true)
       }
 
     } catch (error) {
@@ -61,6 +61,21 @@ export const Post = ({ postData }) => {
 
 
   const handleDisLike = async () => {
+
+    if (!state) {
+      Swal.fire({
+        position: "top-end",
+        title: "User must be login ",
+        showConfirmButton: false,
+        width: '300px',
+        timer: 1500,
+        customClass: {
+          popup: 'custom-swal-background'
+        }
+      });
+      return
+    }
+    setLiked(false)
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/unlike`, {
         method: 'PUT',
@@ -75,7 +90,6 @@ export const Post = ({ postData }) => {
 
       const data = await response.json();
       if (response.ok) {
-        setLiked(false)
         setLikes(data.updatedData.likes.length)
       }
 

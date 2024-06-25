@@ -9,6 +9,7 @@ export const Signup = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [losading, setLoading ] = useState(false)
 
     const Navigate = useNavigate(useState)
 
@@ -26,12 +27,14 @@ export const Signup = () => {
 
     const handleSignupSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true)
 
         if ([name, email, password, confirmPassword].some((field) => field === "")) {
             setError({
                 message: "All fields are required",
                 show: true,
             });
+            setLoading(false)
             return;
         }
 
@@ -40,6 +43,7 @@ export const Signup = () => {
                 message: "Invalid email",
                 show: true,
             });
+            setLoading(false)
             return;
         }
         
@@ -50,6 +54,7 @@ export const Signup = () => {
                 message: "Passwords do not match",
                 show: true,
             });
+            setLoading(false)
             return;
         }
 
@@ -71,6 +76,7 @@ export const Signup = () => {
             //   console.log(response);
             const data = await response.json();
             if (response.ok) {
+                setLoading(false)
                 Swal.fire({
                     position: 'top',
                     icon: "success",
@@ -96,6 +102,8 @@ export const Signup = () => {
                 message: "Failed to signup. Please try again later.",
                 show: true,
             });
+        } finally {
+            setLoading(false)
         }
     };
     return (
@@ -112,6 +120,7 @@ export const Signup = () => {
                             onChange={(e) => setName(e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                             placeholder="Enter your name"
+                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -123,6 +132,7 @@ export const Signup = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                             placeholder="Enter your email"
+                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -134,6 +144,7 @@ export const Signup = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                             placeholder="Enter your password"
+                            required
                         />
                     </div>
                     <div className="mb-6">
@@ -145,6 +156,7 @@ export const Signup = () => {
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                             placeholder="Confirm your password"
+                            required
                         />
                     </div>
                     {

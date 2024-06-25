@@ -3,6 +3,7 @@ import { Post } from '../components/Post';
 import { useState } from 'react';
 import { data } from 'autoprefixer';
 import { useNavigate } from 'react-router-dom';
+import { Loader } from '../components/Loader';
 
 export const Home = () => {
 
@@ -44,7 +45,9 @@ export const Home = () => {
 
 
     if (loading) {
-        return <div className=' w-full h-screen text-black flex items-center justify-center text-2xl'>Loading...</div>
+        return (
+            <Loader />
+        )
     }
 
     return (

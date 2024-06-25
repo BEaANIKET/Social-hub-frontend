@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { userContext } from '../App'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +10,20 @@ export const Navbar = () => {
   const { state, dispatch } = useContext(userContext)
   const Navigate = useNavigate()
   const [open, setOpen] = useState(true)
+  const navRef = useRef(null)
+
+  useEffect(() => {
+    document.onclick = (event) => {
+      console.log(navRef.current.contains(event.target));
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setOpen(true)
+      }
+    }
+  
+    return () => {
+      document.onclick = null
+    }
+  }, [])
 
   const handleLogoutBtn = async () => {
     try {
@@ -51,9 +65,6 @@ export const Navbar = () => {
     setOpen(true)
   }
 
-  useEffect(() => {
-  }, [Navigate])
-
   const handleThreeDot = () => {
     setOpen(!open)
   }
@@ -76,7 +87,7 @@ export const Navbar = () => {
   }
 
   return (
-    <nav className="bg-black text-white z-10 w-full p-4 flex justify-between flex-col sm:flex-row sticky top-0 items-center">
+    <nav ref={(navRef)} className="bg-black text-white z-10 w-full p-4 flex justify-between flex-col sm:flex-row sticky top-0 items-center">
       <div className=' w-full flex justify-between '>
         <div className="flex items-center">
           {/* <img
@@ -84,7 +95,7 @@ export const Navbar = () => {
           alt="Logo"
           className="h-10 w-10"
         /> */}
-          <Link to={state ? '/' : null} className="text-2xl font-bold">Social Hub</Link>
+          <Link to={'/'}  className="text-2xl font-bold">Social Hub</Link>
         </div>
         <div onClick={handleThreeDot} className=' sm:hidden w-fit h-fit'>
           <ion-icon size="large" name="ellipsis-vertical-outline" ></ion-icon>
@@ -93,7 +104,7 @@ export const Navbar = () => {
       {/* Logo */}
 
       {/* Profile and Logout Buttons */}
-      <div className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 `}>
+      <div  className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 `}>
         {
           renderList()
         }
