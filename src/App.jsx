@@ -12,6 +12,7 @@ import { initialState, reducer } from './reducer/userReducer'
 import { Userprofile } from './pages/Userprofile'
 import { FollowingPost } from './pages/FollowingPost'
 import { Forgetpassword } from './pages/Forgetpassword'
+import { Search } from './pages/Search'
 
 export const userContext = createContext()
 
@@ -58,6 +59,7 @@ const Routing = () => {
         <Route path="/profile/:id" element={<Userprofile />} />
         <Route path="/followingpost" element={<FollowingPost />} />
         <Route path="/forgetpassword" element={<Forgetpassword />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </>
   )

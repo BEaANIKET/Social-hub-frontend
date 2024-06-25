@@ -4,6 +4,7 @@ import { userContext } from '../App'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import '../App.css'
+import search from '../assets/search.jpg'
 
 export const Navbar = () => {
 
@@ -14,7 +15,6 @@ export const Navbar = () => {
 
   useEffect(() => {
     document.onclick = (event) => {
-      console.log(navRef.current.contains(event.target));
       if (navRef.current && !navRef.current.contains(event.target)) {
         setOpen(true)
       }
@@ -105,6 +105,9 @@ export const Navbar = () => {
 
       {/* Profile and Logout Buttons */}
       <div  className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 `}>
+      <div onClick={ () => Navigate('/search')} className=' h-[30px] w-[30px]  '> 
+        <img src={search} alt="" />
+      </div>
         {
           renderList()
         }

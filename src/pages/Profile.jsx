@@ -125,8 +125,6 @@ export const Profile = () => {
             });
 
             const data = await response.json();
-            // console.log("response = ", response);
-            // console.log("data ", data);
             if (response.ok) {
                 console.log("mypost ", mypost);
                 console.log("Updated data:", data);
@@ -161,7 +159,6 @@ export const Profile = () => {
         setProfilePic(e.target.files[0])
     }
 
-    // console.log(mypost);
     const handleDeletePost = async () => {
         try {
             setDeleteLoading(true)
@@ -206,7 +203,6 @@ export const Profile = () => {
         );
     }
 
-    // console.log(selectedPost);
 
     return (
         <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen w-full '>
@@ -309,10 +305,7 @@ export const Profile = () => {
                                     </button>
                                 )
                             }
-
-
                         </div>
-                        hsaklfha
                     </div>
                 </div>
             )}
