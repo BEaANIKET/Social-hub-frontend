@@ -46,6 +46,8 @@ export const Profile = () => {
                 setMypost(data);
                 setLoading(false);
                 setError(false);
+                setProfilePic(data.user.image)
+                console.log(data);
             } else {
                 // setError(true);
             }
@@ -81,9 +83,8 @@ export const Profile = () => {
 
         e.preventDefault()
         try {
-            // Step 1: Upload profile picture to Cloudinary
             const formData = new FormData();
-            formData.append('file', profilePic); // Assuming profilePic is a File object
+            formData.append('file', profilePic)
             formData.append('upload_preset', 'instagram_clone');
             formData.append('cloud_name', 'dowylsrxx');
 
@@ -101,7 +102,6 @@ export const Profile = () => {
                 });
                 return;
             } else {
-                setUrl(cloudinaryData.url)
                 setUpDateError({
                     show: false,
                     m: ""
@@ -126,16 +126,14 @@ export const Profile = () => {
 
             const data = await response.json();
             if (response.ok) {
-                console.log("mypost ", mypost);
-                console.log("Updated data:", data);
-                setMypost( prev => (
+                setMypost(prev => (
                     {
                         ...prev,
                         user: data,
                     }
                 ))
+                setProfilePic(data.image)
                 setEditProfile(false)
-                // Navigate('/profile')
             } else {
                 setUpDateError({
                     show: true,
@@ -150,13 +148,14 @@ export const Profile = () => {
                 m: "An error occurred while updating profile. Please try again later."
             });
         }
-    };
+    }
+
     const closeEditprofilePopup = () => {
         setEditProfile(false)
     }
 
     const handleProfilePicChange = (e) => {
-        setProfilePic(e.target.files[0])
+        setProfilePic( URL.createObjectURL(e.target.files[0]))
     }
 
     const handleDeletePost = async () => {
@@ -262,15 +261,15 @@ export const Profile = () => {
 
             {/* User post sections */}
             <hr className='w-full' />
-            <div className='post mt-[20px] w-full grid grid-cols-3 sm:grid-cols-4 pl-[10px] pr-[10px] gap-[10px] '>
+            <div className='post mt-[20px] w-full  grid grid-cols-3 sm:grid-cols-4 pl-[10px] pr-[10px] gap-[10px] '>
                 {mypost?.userPosts.length !== 0 ? (
                     mypost.userPosts.map((post, index) => (
                         <div key={index} onClick={() => openPopup(post)} className='cursor-pointer'>
                             <img className='h-full w-full' src={post.image} alt='' />
                         </div>
                     ))) : (
-                    <div className=' w-screen h-full text-black flex text-2xl items-center justify-center '>
-                        <p> No posts found </p>
+                    <div className=' whitespace-nowrap w-screen absolute right-0 text-black text-2xl'>
+                        <p className='w-fit mr-auto ml-auto ' > No posts found </p>
                     </div>
                 )}
             </div>
@@ -325,11 +324,11 @@ export const Profile = () => {
                                 <div className="mb-4">
                                     <label htmlFor="profilePic" className="block text-sm font-medium text-gray-700 border-2 overflow-hidden border-black ml-auto mr-auto h-24 w-24 rounded-full cursor-pointer">
                                         <div className="h-full w-full flex items-center justify-center relative opacity-[0.7] ">
-                                            {profilePic ? (
-                                                <img src={URL.createObjectURL(profilePic)} alt="Profile" className="h-full w-full object-cover rounded-full" />
-                                            ) : (
-                                                <img src={profileLogo} alt="Profile" className="h-full w-full object-cover rounded-full" />
-                                            )}
+                                    
+                                                <img src={profilePic} alt="Profile" className="h-full w-full object-cover rounded-full" />
+                                            
+                                                {/* <img src={profileLogo} alt="Profile" className="h-full w-full object-cover rounded-full" /> */}
+                                            
                                             <span className=' absolute h-full w-full'> <p className=' w-full h-full flex items-center justify-center text-white text-3xl'> + </p> </span>
                                         </div>
                                     </label>
