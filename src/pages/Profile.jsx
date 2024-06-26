@@ -47,7 +47,6 @@ export const Profile = () => {
                 setLoading(false);
                 setError(false);
                 setProfilePic(data.user.image)
-                console.log(data);
             } else {
                 // setError(true);
             }
