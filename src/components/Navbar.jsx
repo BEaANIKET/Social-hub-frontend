@@ -25,6 +25,8 @@ export const Navbar = () => {
     }
   }, [])
 
+  console.log(state);
+
   const handleLogoutBtn = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/logout`, {

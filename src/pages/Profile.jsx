@@ -21,9 +21,10 @@ export const Profile = () => {
 
     const [editprofile, setEditProfile] = useState(false)
     const [profilePic, setProfilePic] = useState(mypost?.user?.image)
+    const [changeProfilePic, setChangeProfilePic] = useState(mypost?.user?.image)
     const [username, setUsername] = useState(state?.name)
-    const [bio, setBio] = useState(state?.bio)
-    const [link, setLink] = useState(state?.link)
+    const [bio, setBio] = useState(mypost?.user?.bio)
+    const [link, setLink] = useState(mypost?.user?.link)
     const [url, setUrl] = useState('')
     const [updateError, setUpDateError] = useState({
         show: false,
@@ -93,12 +94,14 @@ export const Profile = () => {
             });
 
             const cloudinaryData = await cloudinaryResponse.json();
-
+            console.log(cloudinaryData);
             if (!cloudinaryResponse.ok) {
                 setUpDateError({
                     show: true,
                     m: "Image not uploaded successfully. Please try again."
                 });
+                setProfilePic(mypost?.user?.image)
+                setChangeProfilePic(mypost?.user?.image)
                 return;
             } else {
                 setUpDateError({
@@ -154,8 +157,12 @@ export const Profile = () => {
     }
 
     const handleProfilePicChange = (e) => {
-        setProfilePic( URL.createObjectURL(e.target.files[0]))
+        setProfilePic(e.target.files[0])
+        setChangeProfilePic(URL.createObjectURL(e.target.files[0]))
     }
+    console.log(profilePic);
+    console.log(changeProfilePic);
+    console.log(mypost?.user?.image);
 
     const handleDeletePost = async () => {
         try {
@@ -324,7 +331,7 @@ export const Profile = () => {
                                     <label htmlFor="profilePic" className="block text-sm font-medium text-gray-700 border-2 overflow-hidden border-black ml-auto mr-auto h-24 w-24 rounded-full cursor-pointer">
                                         <div className="h-full w-full flex items-center justify-center relative opacity-[0.7] ">
                                     
-                                                <img src={profilePic} alt="Profile" className="h-full w-full object-cover rounded-full" />
+                                                <img src={changeProfilePic || profilePic} alt="Profile" className="h-full w-full object-cover rounded-full" />
                                             
                                                 {/* <img src={profileLogo} alt="Profile" className="h-full w-full object-cover rounded-full" /> */}
                                             

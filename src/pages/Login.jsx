@@ -51,7 +51,6 @@ export const Login = () => {
           password: password
         }),
         credentials: 'include',
-        withCredentials: true
       })
 
       if (response.status === 200) {

@@ -16,34 +16,34 @@ import { Search } from './pages/Search'
 
 export const userContext = createContext()
 
-function getCookie(name) {
-  let cookies = document.cookie.split(';');
-  for (let cookie of cookies) {
-    let [cookieName, cookieValue] = cookie.split('=');
-    cookieName = cookieName.trim();
-    if (cookieName === name) {
-      const cookieUser = decodeURIComponent(cookieValue);
-      const startIndex = cookieUser.indexOf('{');
-      const endIndex = cookieUser.indexOf('}') + 1;
-      if (startIndex !== -1 && endIndex !== -1) {
-        const user = cookieUser.substring(startIndex, endIndex);
-        console.log(user);
-        return JSON.parse(user);
-      }
-    }
-  }
-  return null;
-}
-
 const Routing = () => {
   const { state, dispatch } = useContext(userContext);
 
   useEffect(() => {
-    const user = getCookie('user');
-    if (user) {
-      console.log(user);
-      dispatch({ type: 'USER', payload: user });
+    const getcurrentUser = async () => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_URL}/api/getcurrentuser`,{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+          })
+  
+          const data = await response.json();
+          if( response.ok ){
+            console.log(data);
+            dispatch({
+              type: 'USER',
+              payload: data.user,
+            })
+          }
+        } catch (error) {
+          console.log("get current user " ,error);
+        }
     }
+
+    getcurrentUser()
   }, [])
 
     console.log( document.cookie);
