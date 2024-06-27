@@ -128,6 +128,16 @@ export const Profile = () => {
 
             const data = await response.json();
             if (response.ok) {
+                Swal.fire({
+                    position: 'top',
+                    title: "profile updated successfully",
+                    icon: 'success',
+                    width: '300px',
+                    customClass: {
+                        popup: 'custom-swal-background2'
+                    },
+                    timer: 3000,
+                })
                 setMypost(prev => (
                     {
                         ...prev,
