@@ -143,8 +143,16 @@ export const Post = ({ postData }) => {
 
   };
 
+
   const handleUserProfileClick = async () => {
-    Navigate(`/profile/${postData.postedBy._id}`)
+    console.log(postData.postedBy._id, state.id);
+    if(postData.postedBy._id === state?.id){
+      console.log("sdjfksdsfs");
+      Navigate('/profile')
+    }
+    else{
+      Navigate(`/profile/${postData.postedBy._id}`)
+    }
   }
 
 

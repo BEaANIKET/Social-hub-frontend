@@ -1,7 +1,7 @@
 
 import './App.css'
 import { Navbar } from './components/Navbar'
-import { BrowserRouter, Route, Routes, json, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { Login } from './pages/Login'
 import { Signup } from './pages/Signup'
@@ -13,6 +13,7 @@ import { Userprofile } from './pages/Userprofile'
 import { FollowingPost } from './pages/FollowingPost'
 import { Forgetpassword } from './pages/Forgetpassword'
 import { Search } from './pages/Search'
+import { AppProvider } from './context/Appcontext'
 
 export const userContext = createContext()
 
@@ -21,33 +22,30 @@ const Routing = () => {
 
   useEffect(() => {
     const getcurrentUser = async () => {
-        try {
-          const response = await fetch(`${import.meta.env.VITE_URL}/api/getcurrentuser`,{
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include'
+      try {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/getcurrentuser`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        })
+
+        const data = await response.json();
+        if (response.ok) {
+          dispatch({
+            type: 'USER',
+            payload: data.user,
           })
-  
-          const data = await response.json();
-          if( response.ok ){
-            console.log(data);
-            dispatch({
-              type: 'USER',
-              payload: data.user,
-            })
-          }
-        } catch (error) {
-          console.log("get current user " ,error);
         }
+      } catch (error) {
+        console.log("get current user ", error);
+      }
     }
 
     getcurrentUser()
   }, [])
 
-    console.log( document.cookie);
-  
   return (
     <>
       <Routes>
@@ -66,14 +64,16 @@ const Routing = () => {
 }
 function App() {
 
-  const [state, dispatch] = useReducer(reducer, initialState )
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   return (
-    <userContext.Provider value={ {state, dispatch}}>
-      <BrowserRouter>
-        <Navbar />
-        <Routing />
-      </BrowserRouter>
+    <userContext.Provider value={{ state, dispatch }}>
+      <AppProvider>
+        <BrowserRouter>
+          <Navbar />
+          <Routing />
+        </BrowserRouter>
+      </AppProvider>
     </userContext.Provider>
   )
 }

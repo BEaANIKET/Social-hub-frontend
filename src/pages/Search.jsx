@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import profilepic from '../assets/profileUser.jpg'
 import { useNavigate } from 'react-router-dom';
+import { userContext } from '../App';
 
 export const Search = () => {
     const [searchVal, setSearchVal] = useState('');
@@ -10,6 +11,7 @@ export const Search = () => {
         message: ""
     });
     const Navigate = useNavigate()
+    const {state} = useContext(userContext)
 
 
     const handleSearch = async (e) => {
@@ -47,6 +49,16 @@ export const Search = () => {
         }
     };
 
+    const navigateToUser = (user) => {
+        if(user._id === state?.id){
+            console.log(user);
+            console.log("sdjfksdsfs");
+            Navigate('/profile')
+          }
+          else{
+            Navigate(`/profile/${user._id}`)
+          }
+    }
 
     return (
         <div className='w-full min-h-screen flex flex-col items-center p-4'>
@@ -66,7 +78,7 @@ export const Search = () => {
             </div>
             <div className='w-full max-w-md mt-4'>
                 {userData.map(user => (
-                    <div onClick={ () => Navigate(`/profile/${user._id}`)} key={user.id} className='bg-white p-4 mb-2 shadow-md rounded flex items-center cursor-pointer '>
+                    <div onClick={ () => navigateToUser(user) } key={user.id} className='bg-white p-4 mb-2 shadow-md rounded flex items-center cursor-pointer '>
                         <img src={user.image || profilepic} className='w-12 h-12 rounded-full mr-4' />
                         <div>
                             <div className='font-bold'>{user.name}</div>

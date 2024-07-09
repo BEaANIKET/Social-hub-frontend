@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import '../App.css'
 import search from '../assets/search.jpg'
+import applogo from '../assets/socialhubLogo.jpg'
 
 export const Navbar = () => {
 
@@ -24,8 +25,6 @@ export const Navbar = () => {
       document.onclick = null
     }
   }, [])
-
-  console.log(state);
 
   const handleLogoutBtn = async () => {
     try {
@@ -97,7 +96,7 @@ export const Navbar = () => {
           alt="Logo"
           className="h-10 w-10"
         /> */}
-          <Link to={'/'}  className="text-2xl font-bold">Social Hub</Link>
+          <Link to={'/'}  className=" h-[40px] text-2xl font-bold"><img className=' h-full w-auto' src={applogo} alt="" /></Link>
         </div>
         <div onClick={handleThreeDot} className=' sm:hidden w-fit h-fit'>
           <ion-icon size="large" name="ellipsis-vertical-outline" ></ion-icon>
