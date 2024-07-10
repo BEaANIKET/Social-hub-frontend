@@ -11,9 +11,9 @@ import { useAppContext } from '../context/Appcontext';
 export const Profile = () => {
     const navigate = useNavigate();
     const { state } = useContext(userContext);
-    const {loading, error} = useGetUserProfile();
-    const {userProfile, setUserProfile} = useAppContext()
-    
+    const { loading, error } = useGetUserProfile();
+    const { userProfile, setUserProfile } = useAppContext()
+
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -86,6 +86,20 @@ export const Profile = () => {
             });
 
             const data = await response.json();
+            if (response.status === 401) {
+                Swal.fire({
+                    position: "top-end",
+                    title: "user must be logedin",
+                    showConfirmButton: false,
+                    width: '300px',
+                    timer: 1500,
+                    customClass: {
+                        popup: 'custom-swal-background'
+                    }
+                });
+                return
+            }
+
             if (response.ok) {
                 Swal.fire({ position: 'top', title: "Profile updated successfully", icon: 'success', width: '300px', customClass: { popup: 'custom-swal-background2' }, timer: 3000 });
                 setProfilePic(data.image);
@@ -108,6 +122,19 @@ export const Profile = () => {
             });
 
             const data = await response.json();
+            if (response.status === 401) {
+                Swal.fire({
+                    position: "top-end",
+                    title: "user must be logedin",
+                    showConfirmButton: false,
+                    width: '300px',
+                    timer: 1500,
+                    customClass: {
+                        popup: 'custom-swal-background'
+                    }
+                });
+                return
+            }
             if (response.ok) {
                 setUserProfile((prev) => ({
                     ...prev,

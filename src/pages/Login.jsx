@@ -53,6 +53,18 @@ export const Login = () => {
         credentials: 'include',
       })
 
+      if(response.status === 401){
+        Swal.fire({
+          position: "top-end",
+          title: "user must be logedin",
+          showConfirmButton: false,
+          width: '300px',
+          timer: 1500,
+          customClass: {
+            popup: 'custom-swal-background'
+          }
+        });
+      }
       if (response.status === 200) {
         setLoading(false)
         const data = await response.json();

@@ -50,6 +50,19 @@ export const Post = ({ postData }) => {
       })
 
       const data = await response.json();
+      if(response.status === 401){
+        Swal.fire({
+          position: "top-end",
+          title: "user must be logedin",
+          showConfirmButton: false,
+          width: '300px',
+          timer: 1500,
+          customClass: {
+            popup: 'custom-swal-background'
+          }
+        });
+        return
+      }
       if (response.ok) {
         setLikes(data.updatedData.likes.length)
       }
@@ -75,7 +88,7 @@ export const Post = ({ postData }) => {
       });
       return
     }
-    setLiked(false)
+    
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/unlike`, {
         method: 'PUT',
@@ -89,8 +102,22 @@ export const Post = ({ postData }) => {
       })
 
       const data = await response.json();
+      if(response.status === 401){
+        Swal.fire({
+          position: "top-end",
+          title: "user must be logedin",
+          showConfirmButton: false,
+          width: '300px',
+          timer: 1500,
+          customClass: {
+            popup: 'custom-swal-background'
+          }
+        });
+        return
+      }
       if (response.ok) {
         setLikes(data.updatedData.likes.length)
+        setLiked(false)
       }
 
     } catch (error) {
@@ -132,7 +159,19 @@ export const Post = ({ postData }) => {
       })
 
       const data = await response.json()
-
+      if(response.status === 401){
+        Swal.fire({
+          position: "top-end",
+          title: "user must be logedin",
+          showConfirmButton: false,
+          width: '300px',
+          timer: 1500,
+          customClass: {
+            popup: 'custom-swal-background'
+          }
+        });
+        return
+      }
       if (response.ok) {
         setComments(data.updatedData.comments)
       }
