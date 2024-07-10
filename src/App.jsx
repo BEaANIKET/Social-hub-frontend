@@ -35,7 +35,7 @@ const Routing = () => {
         console.log(data);
 
         if (response.ok) {
-          console.log(data);
+          console.log("Success");
           dispatch({
             type: 'USER',
             payload: data.user,
