@@ -32,7 +32,10 @@ const Routing = () => {
         })
 
         const data = await response.json();
+        console.log(data);
+
         if (response.ok) {
+          console.log(data);
           dispatch({
             type: 'USER',
             payload: data.user,

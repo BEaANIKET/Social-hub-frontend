@@ -159,7 +159,7 @@ export const Post = ({ postData }) => {
   const toggleComments = () => {
     setShowComments(!showComments);
   };
-
+ 
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden  w-fit my-4">
