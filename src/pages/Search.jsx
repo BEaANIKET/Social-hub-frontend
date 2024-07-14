@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import profilepic from '../assets/profileUser.jpg'
 import { useNavigate } from 'react-router-dom';
 import { userContext } from '../App';
@@ -12,6 +12,7 @@ export const Search = () => {
     });
     const Navigate = useNavigate()
     const {state} = useContext(userContext)
+    const searchRef = useRef();
 
 
     const handleSearch = async (e) => {
@@ -32,7 +33,6 @@ export const Search = () => {
             const data = await response.json();
             if (response.ok) {
                 setUserData(data.user)
-                console.log(data.user);
             }
             else if (response.status === 404) {
                 setError({
@@ -51,20 +51,27 @@ export const Search = () => {
 
     const navigateToUser = (user) => {
         if(user._id === state?.id){
-            console.log(user);
-            console.log("sdjfksdsfs");
             Navigate('/profile')
           }
           else{
             Navigate(`/profile/${user._id}`)
           }
-    }
+    }  
+    // Add event listener for Enter key press in search input
+    useEffect(() =>  {
+        searchRef.current.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                handleSearch(e)
+            }
+        })
+    }, [])
 
     return (
         <div className='w-full min-h-screen flex flex-col items-center p-4'>
             <div className=' bg-black p-4 w-full max-w-md'>
                 <div className='flex'>
                     <input
+                    ref={ searchRef }
                         type="text"
                         value={searchVal}
                         onChange={(e) => setSearchVal(e.target.value)}
@@ -77,7 +84,7 @@ export const Search = () => {
                 </div>
             </div>
             <div className='w-full max-w-md mt-4'>
-                {userData.map(user => (
+                {userData.length !== 0 ? userData.map(user => (
                     <div onClick={ () => navigateToUser(user) } key={user.id} className='bg-white p-4 mb-2 shadow-md rounded flex items-center cursor-pointer '>
                         <img src={user.image || profilepic} className='w-12 h-12 rounded-full mr-4' />
                         <div>
@@ -85,7 +92,10 @@ export const Search = () => {
                             <div className='text-gray-600'>{user.email}</div>
                         </div>
                     </div>
-                ))}
+                )) : (
+                    <p className=' w-full text-center'>No results found</p>
+                )
+            }
             </div>
         </div>
     );

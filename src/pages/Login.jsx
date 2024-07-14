@@ -65,6 +65,15 @@ export const Login = () => {
           }
         });
       }
+
+      if(response.status === 400){
+        const data = await response.json();
+        setError({
+          message: data.error,
+          isError: true
+        });
+        return;
+      }
       if (response.status === 200) {
         setLoading(false)
         const data = await response.json();

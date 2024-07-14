@@ -1,207 +1,182 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { userContext } from '../App';
-import Swal from 'sweetalert2'
-import '../App.css'
+import Swal from 'sweetalert2';
+import '../App.css';
 import { useNavigate } from 'react-router-dom';
 
 export const Post = ({ postData }) => {
-  const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState(postData.comments);
   const [newComment, setNewComment] = useState('');
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const Navigate = useNavigate()
-
-  const { state, dispatch } = useContext(userContext)
+  const navigate = useNavigate();
+  const { state } = useContext(userContext);
 
   useEffect(() => {
-    setLikes(postData.likes.length)
-    setComments(postData?.comments)
-    const userLiked = postData.likes.some(like => like === state?.id)
-    setLiked(userLiked)
-  }, [state])
+    const userLiked = postData.likes.some((like) => like === state?.id);
+    setLiked(userLiked);
+  }, [state, postData.likes]);
 
   const handleLike = async () => {
-    try {
-      if (!state) {
-        Swal.fire({
-          position: "top-end",
-          title: "User must be login ",
-          showConfirmButton: false,
-          width: '300px',
-          timer: 1500,
-          customClass: {
-            popup: 'custom-swal-background'
-          }
-        });
-        return
-      }
-      setLiked(true)
-
-      const response = await fetch(`${import.meta.env.VITE_URL}/api/like`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          postId: postData._id
-        }),
-        credentials: 'include'
-      })
-
-      const data = await response.json();
-      if(response.status === 401){
-        Swal.fire({
-          position: "top-end",
-          title: "user must be logedin",
-          showConfirmButton: false,
-          width: '300px',
-          timer: 1500,
-          customClass: {
-            popup: 'custom-swal-background'
-          }
-        });
-        return
-      }
-      if (response.ok) {
-        setLikes(data.updatedData.likes.length)
-      }
-
-    } catch (error) {
-      console.log("errro during likes ", error);
-    }
-  };
-
-
-  const handleDisLike = async () => {
-
     if (!state) {
       Swal.fire({
-        position: "top-end",
-        title: "User must be login ",
+        position: 'top-end',
+        title: 'User must be logged in',
         showConfirmButton: false,
         width: '300px',
         timer: 1500,
         customClass: {
-          popup: 'custom-swal-background'
-        }
+          popup: 'custom-swal-background',
+        },
       });
-      return
+      return;
     }
-    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_URL}/api/like`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ postId: postData._id }),
+        credentials: 'include',
+      });
+
+      if (response.status === 401) {
+        Swal.fire({
+          position: 'top-end',
+          title: 'User must be logged in',
+          showConfirmButton: false,
+          width: '300px',
+          timer: 1500,
+          customClass: {
+            popup: 'custom-swal-background',
+          },
+        });
+        return;
+      }
+
+      if (response.ok) {
+        setLiked(true);
+      }
+    } catch (error) {
+      console.error('Error during like:', error);
+    }
+  };
+
+  const handleDisLike = async () => {
+    if (!state) {
+      Swal.fire({
+        position: 'top-end',
+        title: 'User must be logged in',
+        showConfirmButton: false,
+        width: '300px',
+        timer: 1500,
+        customClass: {
+          popup: 'custom-swal-background',
+        },
+      });
+      return;
+    }
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/unlike`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          postId: postData._id
-        }),
-        credentials: 'include'
-      })
+        body: JSON.stringify({ postId: postData._id }),
+        credentials: 'include',
+      });
 
-      const data = await response.json();
-      if(response.status === 401){
+      if (response.status === 401) {
         Swal.fire({
-          position: "top-end",
-          title: "user must be logedin",
+          position: 'top-end',
+          title: 'User must be logged in',
           showConfirmButton: false,
           width: '300px',
           timer: 1500,
           customClass: {
-            popup: 'custom-swal-background'
-          }
+            popup: 'custom-swal-background',
+          },
         });
-        return
-      }
-      if (response.ok) {
-        setLikes(data.updatedData.likes.length)
-        setLiked(false)
+        return;
       }
 
+      if (response.ok) {
+        setLiked(false);
+      }
     } catch (error) {
-      console.log("errro during likes ", error);
+      console.error('Error during dislike:', error);
     }
   };
-  // console.log(postData);
 
   const handleAddComment = async () => {
-    if (newComment.trim() === '') {
-      return
-    }
+    if (newComment.trim() === '') return;
 
     if (!state) {
       Swal.fire({
-        position: "top-end",
-        title: "User must be login ",
+        position: 'top-end',
+        title: 'User must be logged in',
         showConfirmButton: false,
         width: '300px',
         timer: 1500,
         customClass: {
-          popup: 'custom-swal-background'
-        }
+          popup: 'custom-swal-background',
+        },
       });
-      return
+      return;
     }
 
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/comment`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           text: newComment,
-          postId: postData._id
+          postId: postData._id,
         }),
-        credentials: 'include'
-      })
+        credentials: 'include',
+      });
 
-      const data = await response.json()
-      if(response.status === 401){
+      if (response.status === 401) {
         Swal.fire({
-          position: "top-end",
-          title: "user must be logedin",
+          position: 'top-end',
+          title: 'User must be logged in',
           showConfirmButton: false,
           width: '300px',
           timer: 1500,
           customClass: {
-            popup: 'custom-swal-background'
-          }
+            popup: 'custom-swal-background',
+          },
         });
-        return
+        return;
       }
+
       if (response.ok) {
-        setComments(data.updatedData.comments)
+        const data = await response.json();
+        setComments([...comments, data.comment]);
+        setNewComment('');
       }
-
     } catch (error) {
-      console.log("comment error ", error);
+      console.error('Error adding comment:', error);
     }
-
   };
 
-
-  const handleUserProfileClick = async () => {
-    console.log(postData.postedBy._id, state.id);
-    if(postData.postedBy._id === state?.id){
-      console.log("sdjfksdsfs");
-      Navigate('/profile')
+  const handleUserProfileClick = () => {
+    if (postData.postedBy._id === state?.id) {
+      navigate('/profile');
+    } else {
+      navigate(`/profile/${postData.postedBy._id}`);
     }
-    else{
-      Navigate(`/profile/${postData.postedBy._id}`)
-    }
-  }
-
+  };
 
   const toggleComments = () => {
     setShowComments(!showComments);
   };
- 
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden  w-fit my-4">
+    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden w-fit my-4">
       <div onClick={handleUserProfileClick} className="p-4 flex items-center cursor-pointer">
         <img
           className="h-12 w-12 rounded-full object-cover"
@@ -213,30 +188,25 @@ export const Post = ({ postData }) => {
           <div className="text-sm text-gray-500">{postData.title}</div>
         </div>
       </div>
-      <img className=" h-auto w-full  object-cover" src={postData.image} />
+      <img className="h-auto w-full object-cover" src={postData.image} alt="Post" />
       <div className="p-4">
         <p className="text-gray-700">{postData.body}</p>
         <div className="mt-4 flex items-center">
-
-          {
-            liked ? (
-              <button
-                disabled={!liked}
-                onClick={handleDisLike}
-                className="text-black hover:text-indigo-700 focus:outline-none"
-              >
-                ❤️ Like {likes}
-              </button>
-            ) : (
-              <button
-                disabled={liked}
-                onClick={handleLike}
-                className="text-black hover:text-indigo-700 focus:outline-none"
-              >
-                🤍 Like {likes}
-              </button>
-            )
-          }
+          {liked ? (
+            <button
+              onClick={handleDisLike}
+              className="text-black hover:text-indigo-700 focus:outline-none"
+            >
+              ❤️ Like {postData.likes.length}
+            </button>
+          ) : (
+            <button
+              onClick={handleLike}
+              className="text-black hover:text-indigo-700 focus:outline-none"
+            >
+              🤍 Like {postData.likes.length}
+            </button>
+          )}
           <button
             onClick={toggleComments}
             className="ml-2 text-black hover:text-indigo-700 focus:outline-none"
@@ -281,7 +251,5 @@ export const Post = ({ postData }) => {
         )}
       </div>
     </div>
-
   );
 };
-

@@ -1,66 +1,59 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { Post } from '../components/Post';
 import { useState } from 'react';
-import { data } from 'autoprefixer';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../components/Loader';
+import { useAppContext } from '../context/Appcontext';
+import { useSocketContext } from '../context/SocketContext';
+import { initializeSocketListeners } from '../socketLishner/SocketLishner';
+import Swal from 'sweetalert2';
 
 export const Home = () => {
 
-    const [posts, setPosts] = useState([]);
-    const navigate = useNavigate()
-    const [error, setError] = useState({
-        message: "",
-        show: false
-    })
-
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const { allPosts, setAllPosts } = useAppContext();
+    const { socket } = useSocketContext();
 
-    // console.log(import.meta.env.VITE_URL+"/api/allpost");
+    // Handle initial fetching of posts and socket events
     useEffect(() => {
         const fetchPosts = async () => {
+            if (allPosts) {
+                setLoading(false);
+                return;
+            }
             try {
                 const response = await fetch(`${import.meta.env.VITE_URL}/api/allpost`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                })
-                const data = await response.json()
+                });
                 if (response.ok) {
-                    setPosts(data.post)
-                    setLoading(false)
-                    // console.log(data);
+                    const data = await response.json();
+                    setAllPosts(data.post);
+                } else {
+                    throw new Error('Failed to fetch posts');
                 }
             } catch (error) {
-                console.log('allpost Error -> ', error);
+                console.error('Error fetching posts:', error);
+                Swal.fire('Error', 'An error occurred while fetching posts.', 'error');
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
-        }
+        };
 
-        fetchPosts()
-        
-    }, [])
-
+        fetchPosts();
+    }, [socket, allPosts, setAllPosts]);
 
     if (loading) {
-        return (
-            <Loader />
-        )
+        return <Loader />;
     }
 
     return (
         <>
-            {/* <div>Home</div> */}
-            {
-                posts.length !== 0 && posts.map((post, index) => {
-                    return (
-                        <Post key={index} postData={post} />
-                    )
-                })
-            }
+            {allPosts &&
+                allPosts.map((post, index) => <Post key={index} postData={post} />)}
         </>
-
-    )
-}
+    );
+};

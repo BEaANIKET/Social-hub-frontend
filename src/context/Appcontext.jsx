@@ -5,8 +5,9 @@ export const AppContext = createContext()
 export const AppProvider = ({ children }) => {
 
     const [userProfile, setUserProfile] = useState(null);
+    const [allPosts, setAllPosts] = useState();
 
-    const allData = { userProfile, setUserProfile}
+    const allData = { userProfile, setUserProfile, allPosts, setAllPosts}
 
     return (
         <AppContext.Provider value={allData}>

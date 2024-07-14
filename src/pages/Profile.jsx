@@ -24,6 +24,7 @@ export const Profile = () => {
     const [bio, setBio] = useState('');
     const [link, setLink] = useState('');
     const [updateError, setUpdateError] = useState({ show: false, m: "" });
+    const { allPosts, setAllPosts } = useAppContext()
 
     useEffect(() => {
         if (userProfile) {
@@ -33,7 +34,7 @@ export const Profile = () => {
             setLink(userProfile.user.link);
         }
     }, [userProfile]);
-
+    
     const openPopup = (post) => {
         setSelectedPost(post);
         setIsPopupOpen(true);
@@ -100,10 +101,16 @@ export const Profile = () => {
                 return
             }
 
+            
             if (response.ok) {
                 Swal.fire({ position: 'top', title: "Profile updated successfully", icon: 'success', width: '300px', customClass: { popup: 'custom-swal-background2' }, timer: 3000 });
                 setProfilePic(data.image);
                 setEditProfile(false);
+                setUserProfile((prev) => ({
+                    ...prev, 
+                    user: data
+                }))
+
             } else {
                 setUpdateError({ show: true, m: "Profile update failed. Please try again." });
             }
@@ -121,7 +128,6 @@ export const Profile = () => {
                 credentials: 'include',
             });
 
-            const data = await response.json();
             if (response.status === 401) {
                 Swal.fire({
                     position: "top-end",
@@ -140,6 +146,8 @@ export const Profile = () => {
                     ...prev,
                     userPosts: prev.userPosts.filter((post) => post._id !== selectedPost._id)
                 }));
+                setAllPosts(allPosts?.filter((post) => post._id !== selectedPost._id))
+
                 closePopup();
             }
         } catch (error) {
@@ -190,7 +198,11 @@ export const Profile = () => {
                 {userProfile?.userPosts.length !== 0 ? (
                     userProfile.userPosts.map((post, index) => (
                         <div key={index} onClick={() => openPopup(post)} className='cursor-pointer'>
-                            <img className='h-full w-full' src={post.image} alt='' />
+                            <img
+                                className='h-[200px] w-full object-cover'
+                                src={post.image}
+                                alt=''
+                            />
                         </div>
                     ))
                 ) : (
@@ -199,16 +211,17 @@ export const Profile = () => {
                     </div>
                 )}
             </div>
+
             {isPopupOpen && selectedPost && (
-                <div className='fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center z-50'>
-                    <div className='bg-white rounded-lg p-4'>
+                <div className='fixed top-0 left-0 w-screen h-full bg-gray-800 bg-opacity-50 flex justify-center items-center z-50'>
+                    <div className='bg-white w-fit rounded-lg p-4'>
                         <div className='flex justify-between items-center mb-2'>
                             <h2 className='text-xl font-semibold'>{selectedPost.title}</h2>
                             <button onClick={closePopup} className='text-gray-500 hover:text-gray-700'>
                                 <ion-icon name='close-outline'></ion-icon>
                             </button>
                         </div>
-                        <img className='max-w-[700px] max-h-[70vh]' src={selectedPost.image} alt='' />
+                        <img className='w-auto h-auto max-h-[70vh] md:w-auto ' src={selectedPost.image} alt='' />
                         <p className='text-gray-700 mt-2'>{selectedPost.body}</p>
                         <div className='flex justify-between mt-4'>
                             <div><p>❤️ {selectedPost.likes.length}</p></div>

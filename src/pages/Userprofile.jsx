@@ -180,42 +180,42 @@ export const Userprofile = () => {
                     </div>
                 </div>
                 {/* Follow button */}
-                {!followBtnShow ? (
-                    <button onClick={handleUnFollowBtn} className='bg-blue-500 h-fit text-white font-semibold py-[10px] px-[20px] rounded-full'>
-                        Unfollow
+                {
+                    <button onClick={followBtnShow ? handleFollowBtn : handleUnFollowBtn} className='bg-blue-500 h-fit text-white font-semibold py-[10px] px-[20px] rounded-full active:sc '>
+                        { followBtnShow ? 'follow' : 'Unfollow'}
                     </button>
-                ) : (
-                    <button onClick={handleFollowBtn} className='bg-blue-500 h-fit text-white font-semibold py-[10px] px-[20px] rounded-full'>
-                        Follow
-                    </button>
-                )}
+               }
             </div>
             {/* User post sections */}
             <hr className='w-full' />
-            <div className='post mt-[20px] w-full grid grid-cols-3 sm:grid-cols-4 pl-[10px] pr-[10px] gap-[10px] '>
-
-                {mypost.userPosts.length !== 0 ? (
+            <div className='post mt-[20px] w-full grid grid-cols-3 sm:grid-cols-4 pl-[10px] pr-[10px] gap-[10px]'>
+                {mypost?.userPosts.length !== 0 ? (
                     mypost.userPosts.map((post, index) => (
                         <div key={index} onClick={() => openPopup(post)} className='cursor-pointer'>
-                            <img className='h-full w-full' src={post.image} alt='' />
+                            <img
+                                className='h-[200px] w-full object-cover'
+                                src={post.image}
+                                alt=''
+                            />
                         </div>
-                    ))) : (
-                    <div className=' w-screen h-full text-black flex text-2xl items-center justify-center '>
-                        <p> No posts found </p>
+                    ))
+                ) : (
+                    <div className='whitespace-nowrap w-screen absolute right-0 text-black text-2xl'>
+                        <p className='w-fit mr-auto ml-auto'>No posts found</p>
                     </div>
                 )}
             </div>
             {/* Popup for displaying selected post */}
             {isPopupOpen && selectedPost && (
                 <div className='fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center z-50'>
-                    <div className='bg-white rounded-lg p-4'>
+                    <div className='bg-white w-fit rounded-lg p-4'>
                         <div className='flex justify-between items-center mb-2'>
                             <h2 className='text-xl font-semibold'>{selectedPost.title}</h2>
                             <button onClick={closePopup} className='text-gray-500 hover:text-gray-700'>
                                 <ion-icon name='close-outline'></ion-icon>
                             </button>
                         </div>
-                        <img className=' sm:max-w-[700px] max-w-[90vw] max-h-[70vh] ' src={selectedPost.image} alt='' />
+                        <img className=' w-auto h-auto max-h-[70vh] md:w-auto ' src={selectedPost.image} alt='' />
                         <p className='text-gray-700 mt-2'>{selectedPost.body}</p>
                         <div>
                             <p> ❤️ {selectedPost.likes.length} </p>

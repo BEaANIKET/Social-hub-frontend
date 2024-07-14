@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2'
 import '../App.css'
+import { useAppContext } from '../context/Appcontext';
 
 export const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [file, setFile] = useState(null);
-  // const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState({
     message: "",
     show: false
   })
+  const {allPosts, setAllPosts} = useAppContext()
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,13 +35,11 @@ export const CreatePost = () => {
     setLoading(true)
 
     try {
-      // Create form data for the Cloudinary upload
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET);
       formData.append('cloud_name', import.meta.env.VITE_CLOUD_NAME);
 
-      // Upload the image to Cloudinary
       const cloudinaryResponse = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`, {
         method: 'POST',
         body: formData
@@ -47,7 +47,6 @@ export const CreatePost = () => {
 
       const cloudinaryData = await cloudinaryResponse.json();
       const url = cloudinaryData.url;
-      console.log(url);
 
       // Create post using the uploaded image URL
       const response = await fetch(`${import.meta.env.VITE_URL}/api/createpost`, {
@@ -64,7 +63,6 @@ export const CreatePost = () => {
       });
 
       const data = await response.json();
-      console.log(data);
 
       // Reset form fields and state
       if (!response.ok) {

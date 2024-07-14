@@ -9,6 +9,10 @@ export const useGetUserProfile = () => {
     const [error, setError] = useState(false);
 
     useEffect(() => {
+        if(userProfile){
+            setLoading(false)
+            return 
+        }
         const fetchData = async () => {
             if (!state) return;
             try {

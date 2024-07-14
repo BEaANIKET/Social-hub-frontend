@@ -1,4 +1,3 @@
-
 import './App.css'
 import { Navbar } from './components/Navbar'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
@@ -13,12 +12,25 @@ import { Userprofile } from './pages/Userprofile'
 import { FollowingPost } from './pages/FollowingPost'
 import { Forgetpassword } from './pages/Forgetpassword'
 import { Search } from './pages/Search'
-import { AppProvider } from './context/Appcontext'
+import { AppProvider, useAppContext } from './context/Appcontext'
+import { SocketContextProvider, useSocketContext } from './context/SocketContext'
+import { initializeSocketListeners } from './socketLishner/SocketLishner'
 
 export const userContext = createContext()
 
+
 const Routing = () => {
   const { state, dispatch } = useContext(userContext);
+  const { setAllPosts, setUserProfile, userProfile, allPosts } = useAppContext();
+  const { socket } = useSocketContext();
+
+  useEffect(() => {
+    const cleanup = initializeSocketListeners(socket, setAllPosts, setUserProfile, userProfile, allPosts);
+
+    return () => {
+      cleanup();
+    };
+  }, [socket, setAllPosts, setUserProfile, userProfile, allPosts]);
 
   useEffect(() => {
     const getcurrentUser = async () => {
@@ -29,25 +41,23 @@ const Routing = () => {
             'Content-Type': 'application/json',
           },
           credentials: 'include'
-        })
+        });
 
         const data = await response.json();
-        console.log(data);
 
         if (response.ok) {
-          console.log("Success");
           dispatch({
             type: 'USER',
             payload: data.user,
-          })
+          });
         }
       } catch (error) {
         console.log("get current user ", error);
       }
-    }
+    };
 
-    getcurrentUser()
-  }, [])
+    getcurrentUser();
+  }, [dispatch]);
 
   return (
     <>
@@ -65,20 +75,22 @@ const Routing = () => {
     </>
   )
 }
-function App() {
 
-  const [state, dispatch] = useReducer(reducer, initialState)
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <userContext.Provider value={{ state, dispatch }}>
-      <AppProvider>
-        <BrowserRouter>
-          <Navbar />
-          <Routing />
-        </BrowserRouter>
-      </AppProvider>
+      <SocketContextProvider>
+        <AppProvider>
+          <BrowserRouter>
+            <Navbar />
+            <Routing />
+          </BrowserRouter>
+        </AppProvider>
+      </SocketContextProvider>
     </userContext.Provider>
   )
 }
 
-export default App
+export default App;

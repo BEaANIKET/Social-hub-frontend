@@ -20,7 +20,7 @@ export const Navbar = () => {
         setOpen(true)
       }
     }
-  
+
     return () => {
       document.onclick = null
     }
@@ -74,21 +74,21 @@ export const Navbar = () => {
     if (state) {
       return [
         <Link onClick={handelSetOpen} className='  w-full sm:w-fit flex items-center rounded-lg justify-center bg-gray-800  ' key={'profile'} to={'/profile'}><button className=" px-3 py-2 "> Profile  </button></Link>,
-        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  rounded-lg ' key={'createPost'} to={'/createpost'}><button className="px-3 py-2 "> CreatePost  </button></Link>,
-        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit whitespace-nowrap flex items-center justify-center rounded-lg bg-gray-800  ' key={'followingPost'} to={'/followingpost'}><button className=" px-3 py-2 "> Following Post  </button></Link>,
-        <button  key={'logout'} onClick={handleLogoutBtn} className=" px-3 py-2 rounded-lg w-full sm:w-fit flex items-center justify-center bg-gray-800 ">Logout</button>
+        <Link onClick={handelSetOpen} className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  rounded-lg ' key={'createPost'} to={'/createpost'}><button className="px-3 py-2 "> CreatePost  </button></Link>,
+        <Link onClick={handelSetOpen} className=' w-full sm:w-fit whitespace-nowrap flex items-center justify-center rounded-lg bg-gray-800  ' key={'followingPost'} to={'/followingpost'}><button className=" px-3 py-2 "> Following Post  </button></Link>,
+        <button key={'logout'} onClick={handleLogoutBtn} className=" px-3 py-2 rounded-lg w-full sm:w-fit flex items-center justify-center bg-gray-800 ">Logout</button>
       ]
     }
     else {
       return [
-        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center bg-gray-800 rounded-lg   ' key={'signup'} to={'/signup'}><button className=" px-3 py-2 "> Signup </button> </Link>,
-        <Link onClick={ handelSetOpen } className=' w-full sm:w-fit flex items-center justify-center m-0 bg-gray-800 rounded-lg ' key={'login'} to={'/login'}><button className=" px-3 py-2 "> Login </button></Link>
+        <Link onClick={handelSetOpen} className=' w-full sm:w-fit flex items-center justify-center bg-gray-800 rounded-lg   ' key={'signup'} to={'/signup'}><button className=" px-3 py-2 "> Signup </button> </Link>,
+        <Link onClick={handelSetOpen} className=' w-full sm:w-fit flex items-center justify-center m-0 bg-gray-800 rounded-lg ' key={'login'} to={'/login'}><button className=" px-3 py-2 "> Login </button></Link>
       ]
     }
   }
 
   return (
-    <nav ref={(navRef)} className="bg-black text-white z-10 w-full p-4 flex justify-between flex-col sm:flex-row sticky top-0 items-center">
+    <nav ref={(navRef)} className="bg-black text-white z-10 w-full p-4 flex justify-between sm:flex-row sticky top-0 items-center">
       <div className=' w-full flex justify-between '>
         <div className="flex items-center">
           {/* <img
@@ -96,19 +96,26 @@ export const Navbar = () => {
           alt="Logo"
           className="h-10 w-10"
         /> */}
-          <Link to={'/'}  className=" h-[40px] text-2xl font-bold"><img className=' h-full w-auto' src={applogo} alt="" /></Link>
+          <Link to={'/'} className=" h-[40px] text-2xl font-bold"><img className=' h-full w-auto' src={applogo} alt="" /></Link>
         </div>
-        <div onClick={handleThreeDot} className=' sm:hidden w-fit h-fit'>
-          <ion-icon size="large" name="ellipsis-vertical-outline" ></ion-icon>
+
+
+        <div className=' flex items-center justify-center'>
+          <div onClick={() => Navigate('/search')} className=' h-[30px] w-[30px]  '>
+            <img src={search} alt="" />
+          </div>
+          <div onClick={handleThreeDot} className=' sm:hidden w-fit h-fit'>
+            <ion-icon size="large" name="ellipsis-vertical-outline" ></ion-icon>
+          </div>
         </div>
+
+
       </div>
       {/* Logo */}
 
       {/* Profile and Logout Buttons */}
-      <div  className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 `}>
-      <div onClick={ () => Navigate('/search')} className=' h-[30px] w-[30px]  '> 
-        <img src={search} alt="" />
-      </div>
+
+      <div className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 `}>
         {
           renderList()
         }
