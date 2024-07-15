@@ -46,6 +46,7 @@ const Routing = () => {
         const data = await response.json();
 
         if (response.ok) {
+          console.log(data);
           dispatch({
             type: 'USER',
             payload: data.user,
