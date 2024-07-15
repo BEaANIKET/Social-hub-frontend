@@ -12,7 +12,7 @@ export const SocketContextProvider = ({children}) => {
 
     useEffect(() => {
         if(state){
-            const socket = io('http://localhost:3000', {
+            const socket = io(`${import.meta.env.VITE_URL}`, {
                 query: {
                     userId: state.id
                 }
