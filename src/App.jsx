@@ -40,7 +40,7 @@ const Routing = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include'
+          credentials: true
         });
 
         const data = await response.json();

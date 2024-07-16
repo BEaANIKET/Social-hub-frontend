@@ -3,6 +3,8 @@ import profileLogo from '../assets/profileUser.jpg';
 import { useParams } from 'react-router-dom';
 import { userContext } from '../App';
 import { Loader } from '../components/Loader';
+import Swal from 'sweetalert2';
+import '../App.css';
 
 export const Userprofile = () => {
     const { state, dispatch } = useContext(userContext);
@@ -68,6 +70,14 @@ export const Userprofile = () => {
                 credentials: 'include'
             });
             const data = await response.json();
+            if(response.status === 401){
+                Swal.fire({
+                    position: 'top',
+                    title: "user must be logedin",
+                    showConfirmButton: false,
+                });
+                return;
+            }
             if (response.ok) {
                 setFollowBtnShow(false);
                 setfollower(follower + 1) // Update UI state after successful follow
@@ -90,6 +100,14 @@ export const Userprofile = () => {
                 credentials: 'include'
             });
             const data = await response.json();
+            if(response.status === 401){
+                Swal.fire({
+                    position: 'top',
+                    title: "user must be logedin",
+                    showConfirmButton: false,
+                });
+                return;
+            }
             if (response.ok) {
                 setFollowBtnShow(true); // Update UI state after successful unfollow
                 setfollower(follower == 0 ? 0 : follower - 1)

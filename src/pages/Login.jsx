@@ -77,7 +77,6 @@ export const Login = () => {
       if (response.status === 200) {
         setLoading(false)
         const data = await response.json();
-        document.cookie = `token=${data.token}; path=/; max-age=${30*24*60*60}; secure; samesite=none`;
         setError({
           message: "",
           isError: false
