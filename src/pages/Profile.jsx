@@ -236,7 +236,7 @@ export const Profile = () => {
             )}
             {editProfile && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-white w-full max-w-md mx-auto rounded-lg shadow-lg p-6">
+                    <div className="bg-white relative w-full max-w-md mx-auto rounded-lg shadow-lg p-6">
                         <button className="absolute top-0 right-0 mt-4 mr-4 text-gray-600 hover:text-gray-800" onClick={closeEditProfilePopup}>
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

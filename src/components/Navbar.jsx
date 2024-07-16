@@ -37,7 +37,6 @@ export const Navbar = () => {
       })
 
       const data = await response.json();
-      console.log(response);
 
       if (data.error) {
         console.log(data.error);
@@ -73,16 +72,16 @@ export const Navbar = () => {
   const renderList = () => {
     if (state) {
       return [
-        <Link onClick={handelSetOpen} className='  w-full sm:w-fit flex items-center rounded-lg justify-center bg-gray-800  ' key={'profile'} to={'/profile'}><button className=" px-3 py-2 "> Profile  </button></Link>,
-        <Link onClick={handelSetOpen} className=' w-full sm:w-fit flex items-center justify-center bg-gray-800  rounded-lg ' key={'createPost'} to={'/createpost'}><button className="px-3 py-2 "> CreatePost  </button></Link>,
-        <Link onClick={handelSetOpen} className=' w-full sm:w-fit whitespace-nowrap flex items-center justify-center rounded-lg bg-gray-800  ' key={'followingPost'} to={'/followingpost'}><button className=" px-3 py-2 "> Following Post  </button></Link>,
-        <button key={'logout'} onClick={handleLogoutBtn} className=" px-3 py-2 rounded-lg w-full sm:w-fit flex items-center justify-center bg-gray-800 ">Logout</button>
+        <Link onClick={handelSetOpen} className=' hover:bg-black  w-full sm:w-fit flex items-center rounded-lg justify-center bg-gray-800  ' key={'profile'} to={'/profile'}><button className=" px-3 py-2 "> Profile  </button></Link>,
+        <Link onClick={handelSetOpen} className=' hover:bg-black w-full sm:w-fit flex items-center justify-center bg-gray-800  rounded-lg ' key={'createPost'} to={'/createpost'}><button className="px-3 py-2 "> CreatePost  </button></Link>,
+        <Link onClick={handelSetOpen} className=' hover:bg-black w-full sm:w-fit whitespace-nowrap flex items-center justify-center rounded-lg bg-gray-800  ' key={'followingPost'} to={'/followingpost'}><button className=" px-3 py-2 "> Following Post  </button></Link>,
+        <button key={'logout'} onClick={handleLogoutBtn} className=" hover:bg-black px-3 py-2 rounded-lg w-full sm:w-fit flex items-center justify-center bg-gray-800 ">Logout</button>
       ]
     }
     else {
       return [
-        <Link onClick={handelSetOpen} className=' w-full sm:w-fit flex items-center justify-center bg-gray-800 rounded-lg   ' key={'signup'} to={'/signup'}><button className=" px-3 py-2 "> Signup </button> </Link>,
-        <Link onClick={handelSetOpen} className=' w-full sm:w-fit flex items-center justify-center m-0 bg-gray-800 rounded-lg ' key={'login'} to={'/login'}><button className=" px-3 py-2 "> Login </button></Link>
+        <Link onClick={handelSetOpen} className=' hover:bg-black w-full sm:w-fit flex items-center justify-center bg-gray-800 rounded-lg   ' key={'signup'} to={'/signup'}><button className=" px-3 py-2 "> Signup </button> </Link>,
+        <Link onClick={handelSetOpen} className=' hover:bg-black w-full sm:w-fit flex items-center justify-center m-0 bg-gray-800 rounded-lg ' key={'login'} to={'/login'}><button className=" px-3 py-2 "> Login </button></Link>
       ]
     }
   }
@@ -115,7 +114,7 @@ export const Navbar = () => {
 
       {/* Profile and Logout Buttons */}
 
-      <div className={`sm:flex items-center sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 `}>
+      <div className={`sm:flex items-center absolute bg-black sm:relative w-full sm:w-fit flex-col sm:flex-row justify-center gap-3 top-[70px] sm:top-0 left-0 right-0 ${open ? 'hidden' : 'flex'} transition-all duration-75 `}>
         {
           renderList()
         }

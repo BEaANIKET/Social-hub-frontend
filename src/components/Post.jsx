@@ -151,7 +151,6 @@ export const Post = ({ postData }) => {
     setShowComments(!showComments);
   };
 
-  console.log(postData);
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden w-fit my-4">
