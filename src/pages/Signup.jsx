@@ -80,7 +80,7 @@ export const Signup = () => {
                 Swal.fire({
                     position: 'top',
                     icon: "success",
-                    title: "User Logged in Successfully",
+                    title: "User Succesully registered",
                     showConfirmButton: false,
                     timer: 1500,
                   });
