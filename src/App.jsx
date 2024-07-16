@@ -44,7 +44,7 @@ const Routing = () => {
         });
 
         const data = await response.json();
-
+        console.log(data);
         if (response.ok) {
           dispatch({
             type: 'USER',
@@ -57,7 +57,7 @@ const Routing = () => {
     };
 
     getcurrentUser();
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
