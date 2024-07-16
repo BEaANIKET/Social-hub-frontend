@@ -151,13 +151,14 @@ export const Post = ({ postData }) => {
     setShowComments(!showComments);
   };
 
+  console.log(postData);
+
   return (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden w-fit my-4">
       <div onClick={handleUserProfileClick} className="p-4 flex items-center cursor-pointer">
         <img
           className="h-12 w-12 rounded-full object-cover"
-          src={`https://avatars.dicebear.com/api/initials/${postData.postedBy.name}.svg`}
-          alt={postData.postedBy.name}
+          src={postData.postedBy.image}
         />
         <div className="ml-4">
           <div className="text-lg font-semibold">{postData?.postedBy?.name}</div>
@@ -198,7 +199,7 @@ export const Post = ({ postData }) => {
                 <div key={index} className="flex items-center mb-2">
                   <img
                     className="h-8 w-8 rounded-full object-cover mr-2"
-                    src={`https://avatars.dicebear.com/api/initials/${comment.postedBy.name}.svg`}
+                    src={comment.postedBy.image}
                     alt={comment.postedBy.name}
                   />
                   <div>
