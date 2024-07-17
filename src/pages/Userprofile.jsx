@@ -24,6 +24,8 @@ export const Userprofile = () => {
         setfollower(mypost?.user?.followers.length)
     }, [mypost])
 
+    window.scrollTo(0,0)
+
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);

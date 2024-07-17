@@ -153,7 +153,7 @@ export const Post = ({ postData }) => {
 
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden w-fit my-4">
+    <div className="max-w-md mx-auto bg-[#FFFF] rounded-lg shadow-md overflow-hidden w-fit my-4">
       <div onClick={handleUserProfileClick} className="p-4 flex items-center cursor-pointer">
         <img
           className="h-12 w-12 rounded-full object-cover"

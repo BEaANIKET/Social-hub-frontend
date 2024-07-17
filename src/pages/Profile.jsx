@@ -35,6 +35,8 @@ export const Profile = () => {
         }
     }, [userProfile]);
     
+    window.scrollTo(0,0)
+    
     const openPopup = (post) => {
         setSelectedPost(post);
         setIsPopupOpen(true);

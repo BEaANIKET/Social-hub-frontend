@@ -14,6 +14,7 @@ export const Search = () => {
     const {state} = useContext(userContext)
     const searchRef = useRef();
 
+    window.scrollTo(0,0)
 
     const handleSearch = async (e) => {
 

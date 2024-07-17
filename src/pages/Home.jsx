@@ -15,6 +15,7 @@ export const Home = () => {
     const { allPosts, setAllPosts } = useAppContext();
     const { socket } = useSocketContext();
 
+    window.scrollTo(0,0)
     // Handle initial fetching of posts and socket events
     useEffect(() => {
         const fetchPosts = async () => {
@@ -52,8 +53,11 @@ export const Home = () => {
 
     return (
         <>
+        <div className=' mt-0 bg-[#EFF4ED] '>
             {allPosts &&
                 allPosts.map((post, index) => <Post key={index} postData={post} />)}
+        </div>
+            
         </>
     );
 };
