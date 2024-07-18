@@ -92,8 +92,8 @@ export const Navbar = () => {
           to={'/createpost'}
         >
           <FaPlus className="text-2xl sm:block" />
-          <button className=" sm:hidden block px-3 py-2">Create Post</button>
-          <span className="absolute z-50 top-[20px] ml-2 whitespace-nowrap sm:block text-green-500 hidden sm:group-hover:block">Create Post</span>
+          <button className=" sm:hidden block px-3 py-2  ">Create Post</button>
+          <span className="absolute z-50 top-[20px] ml-2 whitespace-nowrap text-green-500 hidden sm:group-hover:block">Create Post</span>
         </Link>,
         // Following Button
         <Link
