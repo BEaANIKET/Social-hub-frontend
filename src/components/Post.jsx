@@ -164,7 +164,7 @@ export const Post = ({ postData }) => {
           <div className="text-sm text-gray-500">{postData.title}</div>
         </div>
       </div>
-      <img className="h-auto w-full object-cover" src={postData.image} alt="Post" />
+      <img className="h-auto w-full object-cover" src={postData.image} />
       <div className="p-4">
         <p className="text-gray-700">{postData.body}</p>
         <div className="mt-4 flex items-center">
