@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { userContext } from '../App';
 import { Post } from '../components/Post';
+import toast from 'react-hot-toast'
 
 export const FollowingPost = () => {
 
@@ -22,12 +23,16 @@ export const FollowingPost = () => {
 
                 const data = await response.json();
                 // console.log("follow post -> ", data);
-
-                if(response.ok ){
-                    setMypost(data.posts);
-                    setLoading(false);
-                    setError(false);
-                }
+                if (response.status < 500) {
+                    if (response.status === 200) {
+                        setMypost(data.posts);
+                        setLoading(false);
+                        setError(false);
+                      return
+                    }
+                    toast.error(data.error)
+                    return;
+                  }
             } catch (error) {
                 console.log("follow Erro post -> ", error);
             } finally {

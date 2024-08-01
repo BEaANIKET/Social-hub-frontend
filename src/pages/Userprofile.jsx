@@ -3,11 +3,11 @@ import profileLogo from '../assets/profileUser.jpg';
 import { useParams } from 'react-router-dom';
 import { userContext } from '../App';
 import { Loader } from '../components/Loader';
-import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 import '../App.css';
 
 export const Userprofile = () => {
-    const { state, dispatch } = useContext(userContext);
+    const { state } = useContext(userContext);
     const { id } = useParams();
     const [mypost, setMypost] = useState({});
     const [loading, setLoading] = useState(true);
@@ -15,16 +15,15 @@ export const Userprofile = () => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
     const [followBtnShow, setFollowBtnShow] = useState(true);
-
-    const [following, setfollowing] = useState(0);
-    const [follower, setfollower] = useState(0);
+    const [following, setFollowing] = useState(0);
+    const [follower, setFollower] = useState(0);
 
     useEffect(() => {
-        setfollowing(mypost?.user?.following.length)
-        setfollower(mypost?.user?.followers.length)
-    }, [mypost])
+        setFollowing(mypost?.user?.following.length);
+        setFollower(mypost?.user?.followers.length);
+    }, [mypost]);
 
-    window.scrollTo(0,0)
+    window.scrollTo(0, 0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,20 +43,20 @@ export const Userprofile = () => {
                     const isFollowing = user.followers.includes(state?.id);
                     setFollowBtnShow(!isFollowing);
                 } else {
+                    toast.error(data.error);
                     setError(true);
                 }
             } catch (error) {
                 console.log("userData error -> ", error);
+                toast.error("An error occurred while fetching user data.");
                 setError(true);
             } finally {
                 setLoading(false);
             }
         };
 
-
         fetchData();
-    }, []);
-
+    }, [id, state?.id]);
 
     const handleFollowBtn = async () => {
         try {
@@ -66,26 +65,20 @@ export const Userprofile = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    followId: id,
-                }),
+                body: JSON.stringify({ followId: id }),
                 credentials: 'include'
             });
             const data = await response.json();
-            if(response.status === 401){
-                Swal.fire({
-                    position: 'top',
-                    title: "user must be logedin",
-                    showConfirmButton: false,
-                });
-                return;
-            }
+
             if (response.ok) {
                 setFollowBtnShow(false);
-                setfollower(follower + 1) // Update UI state after successful follow
+                setFollower(prev => prev + 1);
+            } else {
+                toast.error(data.error);
             }
         } catch (error) {
             console.log("follow error ", error);
+            toast.error("An error occurred while following.");
         }
     };
 
@@ -96,26 +89,20 @@ export const Userprofile = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    followId: id,
-                }),
+                body: JSON.stringify({ followId: id }),
                 credentials: 'include'
             });
             const data = await response.json();
-            if(response.status === 401){
-                Swal.fire({
-                    position: 'top',
-                    title: "user must be logedin",
-                    showConfirmButton: false,
-                });
-                return;
-            }
+
             if (response.ok) {
-                setFollowBtnShow(true); // Update UI state after successful unfollow
-                setfollower(follower == 0 ? 0 : follower - 1)
+                setFollowBtnShow(true);
+                setFollower(prev => (prev > 0 ? prev - 1 : 0));
+            } else {
+                toast.error(data.error);
             }
         } catch (error) {
             console.log("unfollow error ", error);
+            toast.error("An error occurred while unfollowing.");
         }
     };
 
@@ -130,9 +117,7 @@ export const Userprofile = () => {
     };
 
     if (loading) {
-        return (
-            <Loader />
-        )
+        return <Loader />;
     }
 
     if (error) {
@@ -140,9 +125,9 @@ export const Userprofile = () => {
     }
 
     return (
-        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen '>
+        <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen'>
             {/* User top sections */}
-            <div className='sm:pl-[30px] pl-2 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row  sm:gap-[30px] md:gap-[100px] w-full justify-center items-center'>
+            <div className='sm:pl-[30px] pl-2 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row sm:gap-[30px] md:gap-[100px] w-full justify-center items-center'>
                 {/* User logo */}
                 <div>
                     <div className='h-[200px] w-[200px] rounded-full overflow-hidden'>
@@ -150,45 +135,25 @@ export const Userprofile = () => {
                     </div>
                 </div>
                 {/* User details */}
-                <div className='flex flex-col gap-5 mt-[20px] '>
+                <div className='flex flex-col gap-5 mt-[20px]'>
                     <div className='flex gap-3 justify-between'>
-                        <p className='text-xl opacity-[.9]'> {mypost.user?.name || 'Loading..'} </p>
+                        <p className='text-xl opacity-[.9]'>{mypost.user?.name || 'Loading..'}</p>
                     </div>
                     <div className='flex gap-3'>
                         <div className='flex gap-2'>
-                            <p className='text-sm font-bold opacity-[.9]'> {mypost.userPosts.length} </p>
-                            <p className='text-sm opacity-[.9]'> Posts </p>
+                            <p className='text-sm font-bold opacity-[.9]'>{mypost.userPosts.length}</p>
+                            <p className='text-sm opacity-[.9]'>Posts</p>
                         </div>
                         <div className='flex gap-3'>
-                            <p className='text-sm font-bold opacity-[.9]'> {follower} </p>
-                            <p className='text-sm opacity-[.9]'> Followers </p>
+                            <p className='text-sm font-bold opacity-[.9]'>{follower}</p>
+                            <p className='text-sm opacity-[.9]'>Followers</p>
                         </div>
                         <div className='flex gap-3'>
-                            <p className='text-sm font-bold opacity-[.9]'> {following} </p>
-                            <p className='text-sm opacity-[.9]'> Following </p>
+                            <p className='text-sm font-bold opacity-[.9]'>{following}</p>
+                            <p className='text-sm opacity-[.9]'>Following</p>
                         </div>
                     </div>
                     <div className='gap-3'>
-                        <div className='flex gap-1'>
-                            <div className='rounded-full border-black border-2 font-semibold text-[10px] h-[15px] w-[15px] flex items-center justify-center overflow-hidden'>
-                                <p>A</p>
-                            </div>
-                            <div className='rounded-full border-black border-2 font-semibold text-[10px] h-[15px] w-[15px] flex items-center justify-center overflow-hidden'>
-                                <p>N</p>
-                            </div>
-                            <div className='rounded-full border-black border-2 font-semibold text-[10px] h-[15px] w-[15px] flex items-center justify-center overflow-hidden'>
-                                <p>I</p>
-                            </div>
-                            <div className='rounded-full border-black border-2 font-semibold text-[10px] h-[15px] w-[15px] flex items-center justify-center overflow-hidden'>
-                                <p>K</p>
-                            </div>
-                            <div className='rounded-full border-black border-2 font-semibold text-[10px] h-[15px] w-[15px] flex items-center justify-center overflow-hidden'>
-                                <p>E</p>
-                            </div>
-                            <div className='rounded-full border-black border-2 font-semibold text-[10px] h-[15px] w-[15px] flex items-center justify-center overflow-hidden'>
-                                <p>T</p>
-                            </div>
-                        </div>
                         <div className='bio'>
                             <p className='text-sm opacity-[.9]'>
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem, quas.
@@ -200,11 +165,12 @@ export const Userprofile = () => {
                     </div>
                 </div>
                 {/* Follow button */}
-                {
-                    <button onClick={followBtnShow ? handleFollowBtn : handleUnFollowBtn} className='bg-blue-500 h-fit text-white font-semibold py-[10px] px-[20px] rounded-full active:sc '>
-                        { followBtnShow ? 'follow' : 'Unfollow'}
-                    </button>
-               }
+                <button
+                    onClick={followBtnShow ? handleFollowBtn : handleUnFollowBtn}
+                    className='bg-blue-500 h-fit text-white font-semibold py-[10px] px-[20px] rounded-full active:sc'
+                >
+                    {followBtnShow ? 'Follow' : 'Unfollow'}
+                </button>
             </div>
             {/* User post sections */}
             <hr className='w-full' />
@@ -212,11 +178,7 @@ export const Userprofile = () => {
                 {mypost?.userPosts.length !== 0 ? (
                     mypost.userPosts.map((post, index) => (
                         <div key={index} onClick={() => openPopup(post)} className='cursor-pointer'>
-                            <img
-                                className='h-[200px] w-full object-cover'
-                                src={post.image}
-                                alt=''
-                            />
+                            <img className='h-[200px] w-full object-cover' src={post.image} alt='' />
                         </div>
                     ))
                 ) : (
@@ -235,7 +197,7 @@ export const Userprofile = () => {
                                 <ion-icon name='close-outline'></ion-icon>
                             </button>
                         </div>
-                        <img className=' w-auto h-auto max-h-[70vh] md:w-auto ' src={selectedPost.image} alt='' />
+                        <img className='w-auto h-auto max-h-[70vh] md:w-auto' src={selectedPost.image} alt='' />
                         <p className='text-gray-700 mt-2'>{selectedPost.body}</p>
                         <div>
                             <p> ❤️ {selectedPost.likes.length} </p>
@@ -243,7 +205,6 @@ export const Userprofile = () => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };

@@ -1,24 +1,32 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { userContext } from '../App';
-import Swal from 'sweetalert2';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export const Post = ({ postData }) => {
   const [comments, setComments] = useState(postData.comments);
   const [newComment, setNewComment] = useState('');
   const [liked, setLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const navigate = useNavigate();
+  const [countLikes, setCountLikes] = useState(postData.likes.length);
+  const [likeLoading, setLikeLoading] = useState(false);
+  const [dislikeLoading, setDislikeLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
+
   const { state } = useContext(userContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userLiked = postData.likes.some((like) => like === state?.id);
     setLiked(userLiked);
+    setCountLikes(postData.likes.length);
   }, [state, postData.likes]);
 
   const handleLike = async () => {
-    
+    if (likeLoading) return;
+    setLikeLoading(true);
+
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/like`, {
         method: 'PUT',
@@ -29,30 +37,24 @@ export const Post = ({ postData }) => {
         credentials: 'include',
       });
 
-      if (response.status === 401) {
-        Swal.fire({
-          position: 'top-end',
-          title: 'User must be logged in',
-          showConfirmButton: false,
-          width: '300px',
-          timer: 1500,
-          customClass: {
-            popup: 'custom-swal-background',
-          },
-        });
-        return;
-      }
-
-      if (response.ok) {
+      const data = await response.json();
+      if (response.status === 200) {
         setLiked(true);
+        setCountLikes(countLikes + 1);
+      } else {
+        toast.error(data.error);
       }
     } catch (error) {
-      console.error('Error during like:', error);
+      toast.error("An error occurred while liking the post.");
+    } finally {
+      setLikeLoading(false);
     }
   };
 
   const handleDisLike = async () => {
-   
+    if (dislikeLoading) return;
+    setDislikeLoading(true);
+
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/unlike`, {
         method: 'PUT',
@@ -63,44 +65,23 @@ export const Post = ({ postData }) => {
         credentials: 'include',
       });
 
-      if (response.status === 401) {
-        Swal.fire({
-          position: 'top-end',
-          title: 'User must be logged in',
-          showConfirmButton: false,
-          width: '300px',
-          timer: 1500,
-          customClass: {
-            popup: 'custom-swal-background',
-          },
-        });
-        return;
-      }
-
-      if (response.ok) {
+      const data = await response.json();
+      if (response.status === 200) {
         setLiked(false);
+        setCountLikes(countLikes - 1);
+      } else {
+        toast.error(data.error);
       }
     } catch (error) {
-      console.error('Error during dislike:', error);
+      toast.error("An error occurred while disliking the post.");
+    } finally {
+      setDislikeLoading(false);
     }
   };
 
   const handleAddComment = async () => {
-    if (newComment.trim() === '') return;
-
-    if (!state) {
-      Swal.fire({
-        position: 'top-end',
-        title: 'User must be logged in',
-        showConfirmButton: false,
-        width: '300px',
-        timer: 1500,
-        customClass: {
-          popup: 'custom-swal-background',
-        },
-      });
-      return;
-    }
+    if (commentLoading || newComment.trim() === '') return;
+    setCommentLoading(true);
 
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/comment`, {
@@ -115,27 +96,17 @@ export const Post = ({ postData }) => {
         credentials: 'include',
       });
 
-      if (response.status === 401) {
-        Swal.fire({
-          position: 'top-end',
-          title: 'User must be logged in',
-          showConfirmButton: false,
-          width: '300px',
-          timer: 1500,
-          customClass: {
-            popup: 'custom-swal-background',
-          },
-        });
-        return;
-      }
-
-      if (response.ok) {
-        const data = await response.json();
+      const data = await response.json();
+      if (response.status === 200) {
         setComments([...comments, data.comment]);
         setNewComment('');
+      } else {
+        toast.error(data.error);
       }
     } catch (error) {
-      console.error('Error adding comment:', error);
+      toast.error("An error occurred while adding a comment.");
+    } finally {
+      setCommentLoading(false);
     }
   };
 
@@ -151,36 +122,38 @@ export const Post = ({ postData }) => {
     setShowComments(!showComments);
   };
 
-
   return (
     <div className="max-w-md mx-auto bg-[#FFFF] rounded-lg shadow-md overflow-hidden w-fit my-4">
       <div onClick={handleUserProfileClick} className="p-4 flex items-center cursor-pointer">
         <img
           className="h-12 w-12 rounded-full object-cover"
           src={postData.postedBy.image}
+          alt={postData.postedBy.name}
         />
         <div className="ml-4">
           <div className="text-lg font-semibold">{postData?.postedBy?.name}</div>
           <div className="text-sm text-gray-500">{postData.title}</div>
         </div>
       </div>
-      <img className="h-auto w-full object-cover" src={postData.image} />
+      <img className="h-auto w-full object-cover" src={postData.image} alt={postData.title} />
       <div className="p-4">
         <p className="text-gray-700">{postData.body}</p>
         <div className="mt-4 flex items-center">
           {liked ? (
             <button
               onClick={handleDisLike}
+              disabled={dislikeLoading}
               className="text-black hover:text-indigo-700 focus:outline-none"
             >
-              ❤️ Like {postData.likes.length}
+              ❤️ Like {countLikes}
             </button>
           ) : (
             <button
               onClick={handleLike}
+              disabled={likeLoading}
               className="text-black hover:text-indigo-700 focus:outline-none"
             >
-              🤍 Like {postData.likes.length}
+              🤍 Like {countLikes}
             </button>
           )}
           <button
@@ -218,6 +191,7 @@ export const Post = ({ postData }) => {
               />
               <button
                 onClick={handleAddComment}
+                disabled={commentLoading}
                 className="ml-2 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
                 Comment

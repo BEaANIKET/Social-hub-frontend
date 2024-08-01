@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Loader } from '../components/Loader';
 import { useAppContext } from '../context/Appcontext';
 import { useSocketContext } from '../context/SocketContext';
-import { initializeSocketListeners } from '../socketLishner/SocketLishner';
 import Swal from 'sweetalert2';
 
 export const Home = () => {
@@ -15,7 +14,6 @@ export const Home = () => {
     const { allPosts, setAllPosts } = useAppContext();
     const { socket } = useSocketContext();
 
-    window.scrollTo(0,0)
     // Handle initial fetching of posts and socket events
     useEffect(() => {
         const fetchPosts = async () => {

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { userContext } from '../App';
 import profileLogo from '../assets/profileUser.jpg';
-import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../components/Loader';
@@ -12,8 +12,7 @@ export const Profile = () => {
     const navigate = useNavigate();
     const { state } = useContext(userContext);
     const { loading, error } = useGetUserProfile();
-    const { userProfile, setUserProfile } = useAppContext()
-
+    const { userProfile, setUserProfile } = useAppContext();
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -23,8 +22,8 @@ export const Profile = () => {
     const [username, setUsername] = useState(state?.name);
     const [bio, setBio] = useState('');
     const [link, setLink] = useState('');
-    const [updateError, setUpdateError] = useState({ show: false, m: "" });
-    const { allPosts, setAllPosts } = useAppContext()
+    const [updateError, setUpdateError] = useState({ show: false, message: "" });
+    const { allPosts, setAllPosts } = useAppContext();
 
     useEffect(() => {
         if (userProfile) {
@@ -34,9 +33,9 @@ export const Profile = () => {
             setLink(userProfile.user.link);
         }
     }, [userProfile]);
-    
-    window.scrollTo(0,0)
-    
+
+    window.scrollTo(0, 0);
+
     const openPopup = (post) => {
         setSelectedPost(post);
         setIsPopupOpen(true);
@@ -73,13 +72,11 @@ export const Profile = () => {
                 body: formData,
             });
 
-            const cloudinaryData = await cloudinaryResponse.json();
             if (!cloudinaryResponse.ok) {
-                setUpdateError({ show: true, m: "Image not uploaded successfully. Please try again." });
-                setProfilePic(userProfile?.user?.image);
-                setChangeProfilePic(userProfile?.user?.image);
-                return;
+                throw new Error("Image not uploaded successfully");
             }
+
+            const cloudinaryData = await cloudinaryResponse.json();
 
             const response = await fetch(`${import.meta.env.VITE_URL}/api/updateprofile`, {
                 method: 'PUT',
@@ -88,36 +85,26 @@ export const Profile = () => {
                 credentials: 'include',
             });
 
-            const data = await response.json();
             if (response.status === 401) {
-                Swal.fire({
-                    position: "top-end",
-                    title: "user must be logedin",
-                    showConfirmButton: false,
-                    width: '300px',
-                    timer: 1500,
-                    customClass: {
-                        popup: 'custom-swal-background'
-                    }
-                });
-                return
+                toast.error("You must be logged in");
+                return;
             }
 
-            
+            const data = await response.json();
             if (response.ok) {
-                Swal.fire({ position: 'top', title: "Profile updated successfully", icon: 'success', width: '300px', customClass: { popup: 'custom-swal-background2' }, timer: 3000 });
+                toast.success("Profile updated successfully");
                 setProfilePic(data.image);
                 setEditProfile(false);
-                setUserProfile((prev) => ({
+                setUserProfile(prev => ({
                     ...prev, 
                     user: data
-                }))
-
+                }));
             } else {
-                setUpdateError({ show: true, m: "Profile update failed. Please try again." });
+                setUpdateError({ show: true, message: "Profile update failed. Please try again." });
             }
         } catch (error) {
-            setUpdateError({ show: true, m: "An error occurred while updating profile. Please try again later." });
+            setUpdateError({ show: true, message: error.message || "An error occurred while updating profile. Please try again later." });
+            toast.error(updateError.message);
         }
     };
 
@@ -131,29 +118,22 @@ export const Profile = () => {
             });
 
             if (response.status === 401) {
-                Swal.fire({
-                    position: "top-end",
-                    title: "user must be logedin",
-                    showConfirmButton: false,
-                    width: '300px',
-                    timer: 1500,
-                    customClass: {
-                        popup: 'custom-swal-background'
-                    }
-                });
-                return
+                toast.error("You must be logged in");
+                return;
             }
-            if (response.ok) {
-                setUserProfile((prev) => ({
-                    ...prev,
-                    userPosts: prev.userPosts.filter((post) => post._id !== selectedPost._id)
-                }));
-                setAllPosts(allPosts?.filter((post) => post._id !== selectedPost._id))
 
+            if (response.ok) {
+                setUserProfile(prev => ({
+                    ...prev,
+                    userPosts: prev.userPosts.filter(post => post._id !== selectedPost._id)
+                }));
+                setAllPosts(allPosts?.filter(post => post._id !== selectedPost._id));
                 closePopup();
+                toast.success("Post deleted successfully");
             }
         } catch (error) {
             console.error('Error deleting post:', error);
+            toast.error("An error occurred while deleting the post");
         } finally {
             setDeleteLoading(false);
         }
@@ -166,7 +146,7 @@ export const Profile = () => {
         <div className='flex flex-col ml-auto mr-auto md:max-w-[1200px] gap-[50px] min-h-screen w-full'>
             <div className='sm:pl-[30px] pl-0 sm:mt-[20px] mt-2 mr-auto flex flex-col sm:flex-row items-center sm:gap-[30px] md:gap-[100px] w-full justify-center'>
                 <div className='h-[200px] w-[200px] rounded-full overflow-hidden'>
-                    <img className='h-full w-full' src={profilePic || profileLogo} alt='' />
+                    <img className='h-full w-full' src={profilePic || profileLogo} alt='Profile' />
                 </div>
                 <div className='flex flex-col gap-5 w-fit mt-3 sm:mt-0'>
                     <div className='flex gap-3 justify-between'>
@@ -197,14 +177,10 @@ export const Profile = () => {
             </div>
             <hr className='w-full' />
             <div className='post mt-[20px] w-full grid grid-cols-3 sm:grid-cols-4 pl-[10px] pr-[10px] gap-[10px]'>
-                {userProfile?.userPosts.length !== 0 ? (
+                {userProfile?.userPosts.length ? (
                     userProfile.userPosts.map((post, index) => (
                         <div key={index} onClick={() => openPopup(post)} className='cursor-pointer'>
-                            <img
-                                className='h-[200px] w-full object-cover'
-                                src={post.image}
-                                alt=''
-                            />
+                            <img className='h-[200px] w-full object-cover' src={post.image} alt='Post' />
                         </div>
                     ))
                 ) : (
@@ -223,7 +199,7 @@ export const Profile = () => {
                                 <ion-icon name='close-outline'></ion-icon>
                             </button>
                         </div>
-                        <img className='w-auto h-auto max-h-[70vh] md:w-auto ' src={selectedPost.image} alt='' />
+                        <img className='w-auto h-auto max-h-[70vh] md:w-auto ' src={selectedPost.image} alt='Selected Post' />
                         <p className='text-gray-700 mt-2'>{selectedPost.body}</p>
                         <div className='flex justify-between mt-4'>
                             <div><p>❤️ {selectedPost.likes.length}</p></div>
@@ -265,7 +241,7 @@ export const Profile = () => {
                             </div>
                             <div className="flex justify-end">
                                 <button type="button" className="mr-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 border border-gray-300 rounded-md hover:bg-gray-300 focus:outline-none focus:border-blue-500 focus:ring-blue-500" onClick={closeEditProfilePopup}>Cancel</button>
-                                {updateError.show && <p className='text-red-500'>{updateError.m}</p>}
+                                {updateError.show && <p className='text-red-500'>{updateError.message}</p>}
                                 <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Save</button>
                             </div>
                         </form>

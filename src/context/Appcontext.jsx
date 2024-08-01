@@ -8,7 +8,6 @@ export const AppProvider = ({ children }) => {
     const [allPosts, setAllPosts] = useState();
 
     const allData = { userProfile, setUserProfile, allPosts, setAllPosts}
-
     return (
         <AppContext.Provider value={allData}>
             {children}

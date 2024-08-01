@@ -15,6 +15,8 @@ import { Search } from './pages/Search'
 import { AppProvider, useAppContext } from './context/Appcontext'
 import { SocketContextProvider, useSocketContext } from './context/SocketContext'
 import { initializeSocketListeners } from './socketLishner/SocketLishner'
+import { Toaster } from 'react-hot-toast';
+
 
 export const userContext = createContext()
 
@@ -86,6 +88,7 @@ function App() {
           <BrowserRouter>
             <Navbar />
             <Routing />
+            <Toaster />
           </BrowserRouter>
         </AppProvider>
       </SocketContextProvider>

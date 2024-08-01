@@ -16,6 +16,18 @@ export const initializeSocketListeners = (
             : post
         )
       );
+
+      // Update user profile posts
+      if (userProfile) {
+        setUserProfile((prevProfile) => ({
+          ...prevProfile,
+          userPosts: prevProfile.userPosts.map((post) =>
+            post._id === data.postId
+              ? { ...post, likes: [...post.likes, data.userId] }
+              : post
+          ),
+        }));
+      }
     } catch (error) {
       console.error("Error handling postLike:", error);
       Swal.fire("Error", "An error occurred while liking the post.", "error");
@@ -31,6 +43,18 @@ export const initializeSocketListeners = (
             : post
         )
       );
+
+      // Update user profile posts
+      if (userProfile) {
+        setUserProfile((prevProfile) => ({
+          ...prevProfile,
+          userPosts: prevProfile.userPosts.map((post) =>
+            post._id === data.postId
+              ? { ...post, likes: post.likes.filter((id) => id !== data.userId) }
+              : post
+          ),
+        }));
+      }
     } catch (error) {
       console.error("Error handling postDisliked:", error);
       Swal.fire("Error", "An error occurred while disliking the post.", "error");
@@ -42,6 +66,16 @@ export const initializeSocketListeners = (
       setAllPosts((prevPosts) =>
         prevPosts.filter((post) => post._id !== data.postId)
       );
+
+      // Update user profile posts
+      if (userProfile) {
+        setUserProfile((prevProfile) => ({
+          ...prevProfile,
+          userPosts: prevProfile.userPosts.filter(
+            (post) => post._id !== data.postId
+          ),
+        }));
+      }
     } catch (error) {
       console.error("Error handling postDeleted:", error);
       Swal.fire("Error", "An error occurred while deleting the post.", "error");
@@ -60,6 +94,21 @@ export const initializeSocketListeners = (
             : post
         )
       );
+
+      // Update user profile posts
+      if (userProfile) {
+        setUserProfile((prevProfile) => ({
+          ...prevProfile,
+          userPosts: prevProfile.userPosts.map((post) =>
+            post._id === data.postId
+              ? {
+                  ...post,
+                  comments: [...post.comments, data.comment],
+                }
+              : post
+          ),
+        }));
+      }
     } catch (error) {
       console.error("Error handling postComment:", error);
       Swal.fire("Error", "An error occurred while adding a comment.", "error");
@@ -67,17 +116,14 @@ export const initializeSocketListeners = (
   };
 
   const handlePostCreated = (data) => {
-    console.log("data :", data);
-    console.log("oldData : ", userProfile);
-
     try {
       if (allPosts) {
         setAllPosts((prevPosts) => [...prevPosts, data.post]);
       }
       if (userProfile) {
-        setUserProfile((prev) => ({
-          ...prev,
-          userPosts: [...prev.userPosts, data.post],
+        setUserProfile((prevProfile) => ({
+          ...prevProfile,
+          userPosts: [...prevProfile.userPosts, data.post],
         }));
       }
     } catch (error) {
@@ -86,7 +132,7 @@ export const initializeSocketListeners = (
     }
   };
 
-  
+  // Listen for socket events
   socket?.on("postLike", handlePostLike);
   socket?.on("postDisliked", handlePostDisliked);
   socket?.on("postDeleted", handlePostDeleted);
@@ -94,6 +140,7 @@ export const initializeSocketListeners = (
   socket?.on("createPost", handlePostCreated);
 
   return () => {
+    // Clean up socket listeners
     socket?.off("postLike", handlePostLike);
     socket?.off("postDisliked", handlePostDisliked);
     socket?.off("postDeleted", handlePostDeleted);
