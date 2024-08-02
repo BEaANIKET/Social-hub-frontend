@@ -1,26 +1,25 @@
-import React, { useRef, useState } from 'react'
-import Swal from 'sweetalert2'
-import '../App.css'
-import { useNavigate } from 'react-router-dom'
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import '../App.css';
 
 export const Forgetpassword = () => {
-
-    const [password, setPassword] = useState()
-    const [otp, setOtp] = useState()
-    const [optSend, setOtpSend] = useState(false)
-    const [email, setEmail] = useState('')
-    const [resend, setResend] = useState(false)
-    const [time, setTime] = useState(10)
+    const [password, setPassword] = useState('');
+    const [otp, setOtp] = useState('');
+    const [otpSend, setOtpSend] = useState(false);
+    const [email, setEmail] = useState('');
+    const [resend, setResend] = useState(false);
+    const [time, setTime] = useState(10);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({
         show: true,
         message: ''
-    })
-    const Navigate = useNavigate()
-
-
+    });
+    const Navigate = useNavigate();
 
     const handlePasswordResetSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        setIsLoading(true);
         try {
             const response = await fetch(`${import.meta.env.VITE_URL}/api/resetpassword`, {
                 method: 'POST',
@@ -29,46 +28,32 @@ export const Forgetpassword = () => {
                 },
                 body: JSON.stringify({
                     otp: otp,
-                    password: password
+                    password: password,
+                    email: email
                 }),
                 credentials: 'include',
-            })
-            const data = await response.json()
-            if (response.status === 200) {
-                Swal.fire({
-                    position: 'top',
-                    title: "passwords updated successfully",
-                    icon: 'success',
-                    width: '300px',
-                    customClass: {
-                        popup: 'custom-swal-background2'
-                    },
-                    timer: 3000,
-                })
-                Navigate('/login')
-            }
-            else if(response.status === 404){
-                Swal.fire({
-                    position: 'top',
-                    title: data.error,
-                    icon: 'error',
-                    width: '300px',
-                    customClass: {
-                        popup: 'custom-swal-background2'
-                    },
-                    timer: 3000,
-                })
+            });
+            const data = await response.json();
+            if (response.status < 500) {
+                if (response.status === 200) {
+                    toast.success('Password updated successfully');
+                    Navigate('/login');
+                }
+                else {
+                    toast.error(data.error);
+                }
             }
         } catch (error) {
-            console.log("passsword verify error ", error);
+            console.log("password verify error ", error);
+            toast.error('An error occurred. Please try again later.');
+        } finally {
+            setIsLoading(false);
         }
-
-    }
+    };
 
     const handleOtpSend = async (e) => {
-        e.preventDefault()
-        console.log("nsakjbafasf");
-        resendBtn()
+        e.preventDefault();
+        resendBtn();
         try {
             const response = await fetch(`${import.meta.env.VITE_URL}/api/otpgenerate`, {
                 method: 'POST',
@@ -79,62 +64,42 @@ export const Forgetpassword = () => {
                     email: email
                 }),
                 credentials: 'include'
-            })
-            const data = await response.json()
-            console.log(data)
-            if (response.status === 200) {
-                Swal.fire({
-                    position: 'top',
-                    title: "otp send to your email",
-                    icon: 'success',
-                    width: '300px',
-                    customClass: {
-                        popup: 'custom-swal-background2'
-                    },
-                    timer: 3000,
-                })
-                setOtpSend(true)
-                setError({
-                    message: "",
-                    isError: false
-                })
-            }
-            else if( response.status === 404 ){
-                Swal.fire({
-                    position: 'top',
-                    title: data.error,
-                    icon: 'error',
-                    width: '300px',
-                    customClass: {
-                        popup: 'custom-swal-background2'
-                    },
-                    timer: 3000,
-                })
-                setOtpSend(false)
-                setResend(false)
+            });
+            const data = await response.json();
+            if (response.status < 500) {
+                if (response.status === 200) {
+                    toast.success('OTP sent to your email');
+                    setOtpSend(true);
+                    setError({
+                        message: "",
+                        isError: false
+                    });
+                }
+                else {
+                    toast.error(data.error);
+                    setOtpSend(false);
+                    setResend(false);
+                    toast.error(data.error);
+                }
             }
         } catch (error) {
-            setError({
-                message: "An error occurred. Please try again later.",
-                show: true
-            })
+            toast.error('An error occurred. Please try again later.');
             console.log(error);
         }
-    }
+    };
 
-
-    let flag = true
+    let flag = true;
     const resendBtn = () => {
         if (flag) {
-            setResend(true); // Presumably disables a resend button
+            setResend(true);
             flag = false;
-            setTime(30)
-            timer()
+            setTime(30);
+            timer();
         }
 
         setTimeout(() => {
-            flag = true; 
-            setResend(false)
+            flag = true;
+            setResend(false);
         }, 30000);
     };
 
@@ -143,16 +108,13 @@ export const Forgetpassword = () => {
             setTime(prevTime => {
                 if (prevTime === 1) {
                     clearInterval(intervalId);
-                    setTime(30); // Reset time after it reaches 0
+                    setTime(30);
                     return 30;
                 }
                 return prevTime - 1;
             });
         }, 1000);
     };
-
-
-
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -173,16 +135,16 @@ export const Forgetpassword = () => {
 
                         <button
                             type="submit"
-                            disabled={resend}
+                            disabled={resend || isLoading}
                             onClick={handleOtpSend}
-                            className=" mt-[10px] w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className={`mt-[10px] w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {resend ? 'Resend in ' : 'Send Otp'} {resend ? time : ''}
                         </button>
 
                     </div>
                     {
-                        optSend &&
+                        otpSend &&
                         <form className="space-y-6">
                             <div>
                                 <label htmlFor="number" className="block text-sm font-medium text-gray-700">Otp</label>
@@ -197,7 +159,7 @@ export const Forgetpassword = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700"> new password</label>
+                                <label htmlFor="password" className="block text-sm font-medium text-gray-700">New Password</label>
                                 <input
                                     type="password"
                                     id="password"
@@ -212,9 +174,10 @@ export const Forgetpassword = () => {
                                 <button
                                     type="submit"
                                     onClick={handlePasswordResetSubmit}
-                                    className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    disabled={isLoading}
+                                    className={`w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
-                                    Reset Password
+                                    {isLoading ? 'Loading...' : 'Reset Password'}
                                 </button>
                             </div>
                         </form>
@@ -226,5 +189,5 @@ export const Forgetpassword = () => {
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};

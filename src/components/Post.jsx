@@ -3,6 +3,7 @@ import { userContext } from '../App';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { PhotoPopup } from './PhotoPopup ';
 
 export const Post = ({ postData }) => {
   const [comments, setComments] = useState(postData.comments);
@@ -13,6 +14,7 @@ export const Post = ({ postData }) => {
   const [likeLoading, setLikeLoading] = useState(false);
   const [dislikeLoading, setDislikeLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const { state } = useContext(userContext);
   const navigate = useNavigate();
@@ -122,8 +124,16 @@ export const Post = ({ postData }) => {
     setShowComments(!showComments);
   };
 
+  const handleImageClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
-    <div className="max-w-md mx-auto bg-[#FFFF] rounded-lg shadow-md overflow-hidden w-fit my-4">
+    <div className="max-w-md mx-auto bg-[#FFFF] rounded-lg shadow-md overflow-hidden w-full ">
       <div onClick={handleUserProfileClick} className="p-4 flex items-center cursor-pointer">
         <img
           className="h-12 w-12 rounded-full object-cover"
@@ -135,7 +145,7 @@ export const Post = ({ postData }) => {
           <div className="text-sm text-gray-500">{postData.title}</div>
         </div>
       </div>
-      <img className="h-auto w-full object-cover" src={postData.image} alt={postData.title} />
+      <img className="h-64 w-full object-cover cursor-pointer" src={postData.image} alt={postData.title} onClick={handleImageClick} />
       <div className="p-4">
         <p className="text-gray-700">{postData.body}</p>
         <div className="mt-4 flex items-center">
@@ -200,6 +210,9 @@ export const Post = ({ postData }) => {
           </div>
         )}
       </div>
+      {showPopup && (
+        <PhotoPopup photoSrc={postData.image} onClose={handleClosePopup} />
+      )}
     </div>
   );
 };

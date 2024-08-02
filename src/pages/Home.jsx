@@ -6,6 +6,7 @@ import { Loader } from '../components/Loader';
 import { useAppContext } from '../context/Appcontext';
 import { useSocketContext } from '../context/SocketContext';
 import Swal from 'sweetalert2';
+import { PostSkeleton } from '../components/PostSkeleton';
 
 export const Home = () => {
 
@@ -46,12 +47,18 @@ export const Home = () => {
     }, [socket, allPosts, setAllPosts]);
 
     if (loading) {
-        return <Loader />;
+        return (
+            <div className="mt-0 bg-[#EFF4ED] p-4">
+                {[...Array(5)].map((_, index) => (
+                    <PostSkeleton key={index} />
+                ))}
+            </div>
+        );
     }
 
     return (
         <>
-        <div className=' mt-0 bg-[#EFF4ED] '>
+        <div className=' mt-0 bg-[#EFF4ED] flex flex-col gap-3 '>
             {allPosts &&
                 allPosts.map((post, index) => <Post key={index} postData={post} />)}
         </div>

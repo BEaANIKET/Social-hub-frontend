@@ -1,44 +1,38 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userContext } from '../App';
-import Swal from 'sweetalert2'
-import '../App.css'
+import { toast } from 'react-hot-toast';
+import '../App.css';
 import { Loader } from '../components/Loader';
 
-// const Swal = require('sweetalert2')
-
 export const Login = () => {
-
-  const { state, dispatch } = useContext(userContext)
+  const { state, dispatch } = useContext(userContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const Navigate = useNavigate();
-  const [loading, setLoading] = useState(false)
-
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
     message: "",
     isError: false
   });
-
-
+  const navigate = useNavigate();
 
   const handleLoginFormSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     setError({
       message: "",
       isError: false
-    })
+    });
 
-    if (email == "" || password == "") {
+    if (!email || !password) {
       setError({
         message: "All fields are required",
         isError: true
       });
-      setLoading(false)
+      toast.error("All fields are required");
+      setLoading(false);
       return;
     }
-
 
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/signin`, {
@@ -46,88 +40,53 @@ export const Login = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        }),
+        body: JSON.stringify({ email, password }),
         credentials: 'include',
-      })
+      });
 
-      if(response.status === 401){
-        Swal.fire({
-          position: "top-end",
-          title: "user must be logedin",
-          showConfirmButton: false,
-          width: '300px',
-          timer: 1500,
-          customClass: {
-            popup: 'custom-swal-background'
-          }
-        });
-      }
+      const data = await response.json();
 
-      if(response.status === 400){
-        const data = await response.json();
+      if (response.status === 401) {
+        toast.error("User must be logged in");
+      } else if (response.status === 400) {
         setError({
           message: data.error,
           isError: true
         });
-        return;
-      }
-      if (response.status === 200) {
-        setLoading(false)
-        const data = await response.json();
-        setError({
-          message: "",
-          isError: false
-        })
-        dispatch({ type: 'USER', payload: data.user })
-        Swal.fire({
-          position: "top-end",
-          title: "LogedIn success",
-          showConfirmButton: false,
-          width: '300px',
-          timer: 1500,
-          customClass: {
-            popup: 'custom-swal-background'
-          }
-        });
-        Navigate('/')
-      }
-      else {
+        toast.error(data.error);
+      } else if (response.status === 200) {
+        dispatch({ type: 'USER', payload: data.user });
+        toast.success("Logged in successfully");
+        navigate('/');
+      } else {
         setError({
           message: "Invalid email or password",
           isError: true
         });
-        return;
+        toast.error("Invalid email or password");
       }
     } catch (error) {
       setError({
         message: "Failed to login. Please try again later.",
         isError: true
-      })
-    } finally{
-      setLoading(false)
+      });
+      toast.error("Failed to login. Please try again later.");
+    } finally {
+      setLoading(false);
     }
-
   };
 
   const handleForgetPassword = () => {
-    Navigate('/forgetpassword')
-  }
-
+    navigate('/forgetpassword');
+  };
 
   return (
     <>
-      {
-        loading && (
-          <Loader />
-        )
-      }
+      {loading && <Loader />}
       <div className="min-h-screen flex items-center justify-center bg-gray-100 fixed w-full top-0">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
           <h2 className="text-2xl font-bold mb-5 text-center">Social Hub</h2>
-          <form>
+          <form onSubmit={handleLoginFormSubmit}>
             <div className="mb-4">
               <label htmlFor="email" className="block text-gray-700 mb-2">Email</label>
               <input
@@ -137,6 +96,7 @@ export const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                 placeholder="Enter your email"
+                required
               />
             </div>
             <div className="mb-6">
@@ -148,33 +108,34 @@ export const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                 placeholder="Enter your password"
+                required
               />
             </div>
-            {
-              error.isError &&
+            {error.isError && (
               <div className='w-full flex justify-center items-center text-red-600'>
                 <p>** {error.message} **</p>
               </div>
-            }
+            )}
             <button
               type="submit"
               className="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300"
-              onClick={handleLoginFormSubmit}
+              disabled={loading}
             >
-              Login
+              {loading ? 'Loading...' : 'Login'}
             </button>
-
             <button
-              className=' cursor-pointer w-full flex items-center justify-center text-black text-sm mt-2'
+              type="button"
+              className='cursor-pointer w-full flex items-center justify-center text-black text-sm mt-2'
               onClick={handleForgetPassword}
             >
-              forget password
+              Forget Password
             </button>
             <button
-              className=' cursor-pointer w-full flex items-center justify-center text-black text-sm mt-2'
-              onClick={() => Navigate('/signup')}
+              type="button"
+              className='cursor-pointer w-full flex items-center justify-center text-black text-sm mt-2'
+              onClick={() => navigate('/signup')}
             >
-              Resister new account
+              Register New Account
             </button>
           </form>
         </div>

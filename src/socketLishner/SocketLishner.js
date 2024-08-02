@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 
 export const initializeSocketListeners = (
   socket,
@@ -30,7 +30,7 @@ export const initializeSocketListeners = (
       }
     } catch (error) {
       console.error("Error handling postLike:", error);
-      Swal.fire("Error", "An error occurred while liking the post.", "error");
+      toast.error("An error occurred while liking the post.");
     }
   };
 
@@ -57,7 +57,7 @@ export const initializeSocketListeners = (
       }
     } catch (error) {
       console.error("Error handling postDisliked:", error);
-      Swal.fire("Error", "An error occurred while disliking the post.", "error");
+      toast.error("An error occurred while disliking the post.");
     }
   };
 
@@ -78,7 +78,7 @@ export const initializeSocketListeners = (
       }
     } catch (error) {
       console.error("Error handling postDeleted:", error);
-      Swal.fire("Error", "An error occurred while deleting the post.", "error");
+      toast.error( "An error occurred while deleting the post.");
     }
   };
 
@@ -111,7 +111,7 @@ export const initializeSocketListeners = (
       }
     } catch (error) {
       console.error("Error handling postComment:", error);
-      Swal.fire("Error", "An error occurred while adding a comment.", "error");
+      toast.error("An error occurred while adding a comment.");
     }
   };
 
@@ -128,7 +128,7 @@ export const initializeSocketListeners = (
       }
     } catch (error) {
       console.error("Error handling postCreated:", error);
-      Swal.fire("Error", "An error occurred while creating a post.", "error");
+      toast.error("An error occurred while creating a post.");
     }
   };
 
