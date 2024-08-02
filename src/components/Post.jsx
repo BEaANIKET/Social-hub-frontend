@@ -4,6 +4,7 @@ import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { PhotoPopup } from './PhotoPopup ';
+import { TbRubberStamp } from 'react-icons/tb';
 
 export const Post = ({ postData }) => {
   const [comments, setComments] = useState(postData.comments);
@@ -28,6 +29,9 @@ export const Post = ({ postData }) => {
   const handleLike = async () => {
     if (likeLoading) return;
     setLikeLoading(true);
+    const prev = countLikes
+    setCountLikes(countLikes + 1);
+    setLiked(true);
 
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/like`, {
@@ -42,12 +46,15 @@ export const Post = ({ postData }) => {
       const data = await response.json();
       if (response.status === 200) {
         setLiked(true);
-        setCountLikes(countLikes + 1);
       } else {
+        setLiked(false);
         toast.error(data.error);
+        setCountLikes(prev);
       }
     } catch (error) {
       toast.error("An error occurred while liking the post.");
+      setLiked(false);
+      setCountLikes(prev);
     } finally {
       setLikeLoading(false);
     }
@@ -56,6 +63,9 @@ export const Post = ({ postData }) => {
   const handleDisLike = async () => {
     if (dislikeLoading) return;
     setDislikeLoading(true);
+    const prev = countLikes
+    setCountLikes(countLikes - 1);
+    setLiked(false);
 
     try {
       const response = await fetch(`${import.meta.env.VITE_URL}/api/unlike`, {
@@ -70,11 +80,14 @@ export const Post = ({ postData }) => {
       const data = await response.json();
       if (response.status === 200) {
         setLiked(false);
-        setCountLikes(countLikes - 1);
       } else {
         toast.error(data.error);
+        setCountLikes(prev);
+         setLiked(TbRubberStamp);
       }
     } catch (error) {
+      setLiked(true);
+      setCountLikes(prev);
       toast.error("An error occurred while disliking the post.");
     } finally {
       setDislikeLoading(false);
