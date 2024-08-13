@@ -11,7 +11,7 @@ export const useGetUserProfile = () => {
     useEffect(() => {
         if(userProfile){
             setLoading(false)
-            return 
+            return;
         }
         const fetchData = async () => {
             if (!state) return;

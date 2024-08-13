@@ -50,7 +50,10 @@ export const initializeSocketListeners = (
           ...prevProfile,
           userPosts: prevProfile.userPosts.map((post) =>
             post._id === data.postId
-              ? { ...post, likes: post.likes.filter((id) => id !== data.userId) }
+              ? {
+                  ...post,
+                  likes: post.likes.filter((id) => id !== data.userId),
+                }
               : post
           ),
         }));
@@ -78,7 +81,7 @@ export const initializeSocketListeners = (
       }
     } catch (error) {
       console.error("Error handling postDeleted:", error);
-      toast.error( "An error occurred while deleting the post.");
+      toast.error("An error occurred while deleting the post.");
     }
   };
 
@@ -132,12 +135,42 @@ export const initializeSocketListeners = (
     }
   };
 
+  const handleFollowing = (data) => {
+    console.log(data);
+    
+    if (userProfile && data.following === userProfile.user._id) {
+      setUserProfile((prev) => ({
+        ...prev,
+        user: {
+          ...prev.user,
+          followers: [...prev.user.followers, data.follower],
+        },
+      }));
+    }
+  };
+
+  const handleUnFollowing = (data) => {
+    if (userProfile) {
+      if (userProfile && data.following === userProfile.user._id) {
+        setUserProfile((prev) => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            followers: prev.user.followers.filter((UiD) => UiD !== data.follower),
+          },
+        }));
+      }
+    }
+  };
+
   // Listen for socket events
   socket?.on("postLike", handlePostLike);
   socket?.on("postDisliked", handlePostDisliked);
   socket?.on("postDeleted", handlePostDeleted);
   socket?.on("postComment", handlePostComment);
   socket?.on("createPost", handlePostCreated);
+  socket?.on("newFollow", handleFollowing);
+  socket?.on("unfollow", handleUnFollowing);
 
   return () => {
     // Clean up socket listeners
@@ -146,5 +179,7 @@ export const initializeSocketListeners = (
     socket?.off("postDeleted", handlePostDeleted);
     socket?.off("postComment", handlePostComment);
     socket?.off("createPost", handlePostCreated);
+    socket?.off("newFollow", handleFollowing);
+    socket?.off("unfollow", handleUnFollowing);
   };
 };

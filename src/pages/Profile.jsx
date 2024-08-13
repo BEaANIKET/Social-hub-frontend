@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader } from '../components/Loader';
 import { useGetUserProfile } from '../hooks/useGetuserProfile';
 import { useAppContext } from '../context/Appcontext';
+import { socketContext } from '../context/SocketContext';
 
 export const Profile = () => {
     const navigate = useNavigate();
@@ -33,6 +34,8 @@ export const Profile = () => {
             setLink(userProfile.user.link);
         }
     }, [userProfile]);
+
+    //  socket Lishner 
 
     window.scrollTo(0, 0);
 

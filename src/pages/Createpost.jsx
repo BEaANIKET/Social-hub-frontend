@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import '../App.css';
 import { useAppContext } from '../context/Appcontext';
+import { Cloudinary } from '@cloudinary/url-gen';
+import { auto } from '@cloudinary/url-gen/actions/resize';
+import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
+import { AdvancedImage } from '@cloudinary/react';
+import toast from 'react-hot-toast';
+
+const cld = new Cloudinary({ cloud: { cloudName: import.meta.env.VITE_CLOUD_NAME } });
 
 export const CreatePost = () => {
   const [description, setDescription] = useState('');
@@ -37,7 +44,6 @@ export const CreatePost = () => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', import.meta.env.VITE_UPLOAD_PRESET);
-        formData.append('cloud_name', import.meta.env.VITE_CLOUD_NAME);
 
         const cloudinaryResponse = await fetch(
           `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
@@ -48,10 +54,23 @@ export const CreatePost = () => {
         );
 
         const cloudinaryData = await cloudinaryResponse.json();
-        url = cloudinaryData.url;
-      }
+        url = cloudinaryData.secure_url;
+        console.log(url);
+        
 
-      // Create post using the uploaded image URL
+        // Apply transformations after uploading the image
+        const img = cld
+          .image(cloudinaryData.public_id)
+          .format('auto')
+          .quality('auto')
+          .resize(auto().gravity(autoGravity()).width(500).height(500));
+
+        url = img.toURL(); // Get the transformed image URL
+      }
+      console.log(url);
+      
+
+      // Create post using the uploaded and transformed image URL
       const response = await fetch(`${import.meta.env.VITE_URL}/api/createpost`, {
         method: 'POST',
         headers: {
@@ -119,7 +138,7 @@ export const CreatePost = () => {
               className='border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-[270px] '
               placeholder='Description'
               value={description}
-               maxLength='280'
+              maxLength='280'
               onChange={(e) => setDescription(e.target.value)}
             />
             <div className={`text-right mt-2 ${description.length > 280 ? 'text-red-500' : 'text-gray-500'}`}>

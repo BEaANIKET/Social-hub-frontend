@@ -5,6 +5,8 @@ import { userContext } from '../App';
 import { Loader } from '../components/Loader';
 import toast from 'react-hot-toast';
 import '../App.css';
+import { useSocketContext } from '../context/SocketContext';
+import { useAppContext } from '../context/Appcontext';
 
 export const Userprofile = () => {
     const { state } = useContext(userContext);
@@ -17,6 +19,8 @@ export const Userprofile = () => {
     const [followBtnShow, setFollowBtnShow] = useState(true);
     const [following, setFollowing] = useState(0);
     const [follower, setFollower] = useState(0);
+    const { userProfile, setUserProfile } = useAppContext()
+    const { socket } = useSocketContext();
 
     useEffect(() => {
         setFollowing(mypost?.user?.following.length);
@@ -58,6 +62,63 @@ export const Userprofile = () => {
         fetchData();
     }, [id, state?.id]);
 
+    // socket Lishner
+    useEffect(() => {
+        // Socket event listeners for follow and unfollow events
+        socket?.on('newFollow', (data) => {
+            if (userProfile) {
+                setUserProfile((prev) => ({
+                    ...prev,
+                    user: {
+                        ...prev.user,
+                        following: [...prev.user.following, id]
+                    }
+                }));
+            }
+
+            if (data.following === id) {
+                setFollower((prev) => prev + 1)
+            }
+
+            if( userProfile && data.following === userProfile.user._id){
+                setUserProfile((prev) => ({
+                    ...prev,
+                    user: {
+                        ...prev.user,
+                        followers: [...prev.user.followers, id]
+                    }
+                }));
+            }
+
+        });
+
+
+        socket?.on('unfollow', (data) => {
+            if (userProfile) {
+                setUserProfile((prev) => ({
+                    ...prev,
+                    user: {
+                        ...prev.user,
+                        following: prev.user.following.filter(FId => FId !== id)
+                    }
+                }));
+            }
+
+            if (data.following === id) {
+                setFollower((prev) => prev - 1)
+            }
+            if( userProfile && userProfile.user_id === data.following){
+                setUserProfile()
+            }
+        });
+
+        // Cleanup listeners on component unmount
+        return () => {
+            socket?.off('newFollow');
+            socket?.off('unfollow');
+        };
+    }, [id, socket]);
+
     const handleFollowBtn = async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_URL}/api/follow`, {
@@ -72,7 +133,7 @@ export const Userprofile = () => {
 
             if (response.ok) {
                 setFollowBtnShow(false);
-                setFollower(prev => prev + 1);
+                // setFollower(prev => prev + 1);
             } else {
                 toast.error(data.error);
             }
@@ -96,7 +157,7 @@ export const Userprofile = () => {
 
             if (response.ok) {
                 setFollowBtnShow(true);
-                setFollower(prev => (prev > 0 ? prev - 1 : 0));
+                // setFollower(prev => (prev > 0 ? prev - 1 : 0));
             } else {
                 toast.error(data.error);
             }
