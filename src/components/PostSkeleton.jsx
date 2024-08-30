@@ -2,7 +2,7 @@ import React from 'react';
 
 export const PostSkeleton = () => {
     return (
-        <div className="max-w-md mx-auto bg-[#FFFF] rounded-lg shadow-md overflow-hidden w-fit my-4">
+        <div className="max-w-md sm:w-[450px] w-full mx-auto bg-[#FFFF] rounded-lg shadow-md overflow-hidden my-4">
             <div className="p-4 flex items-center">
                 <div className="h-12 w-12 rounded-full bg-gray-200"></div>
                 <div className="ml-4">

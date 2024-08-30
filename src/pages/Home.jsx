@@ -55,7 +55,7 @@ export const Home = () => {
             </div>
         );
     }
-
+    
     return (
         <>
         <div className=' mt-0 bg-[#EFF4ED] flex flex-col gap-3 '>

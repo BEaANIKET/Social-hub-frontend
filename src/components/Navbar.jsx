@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import '../App.css';
 import search from '../assets/search.jpg';
-import applogo from '../assets/socialhubLogo.jpg';
 import { FaPlus, FaUserFriends, FaSignOutAlt, FaUser, FaSearch } from 'react-icons/fa';
+import applogo from '../assets/navlogo.png'
+
 
 export const Navbar = () => {
   const { state, dispatch } = useContext(userContext);
